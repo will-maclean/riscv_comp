@@ -1,6 +1,6 @@
 #include "comp.hpp"
 
-Comp::Comp() :
+Comp::Comp(InstructionParser parser) :
     ram(RAM()),
-    cpu(CPU(&this->ram)){
+    cpu(CPU(&this->ram, parser)){
 }

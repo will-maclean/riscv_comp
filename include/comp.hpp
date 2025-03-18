@@ -9,7 +9,7 @@
 
 class Comp{
 	public:
-		Comp();
+		Comp(InstructionParser parser);
 
 	private:
 		RAM ram;

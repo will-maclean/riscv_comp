@@ -14,6 +14,9 @@ struct CPURegisters{
 
 	//FIXME: force this to be a 32-bit floating point register
 	float regf[32];
+
+	CPURegisters();
+	void display();
 };
 
 
@@ -44,7 +47,7 @@ class CPUCore{
 
 class CPU{
 	public:
-		CPU(RAM* ram);
+		CPU(RAM* ram, InstructionParser parser);
 	private:
 		//just one thread for now, can support multi-core later
 		CPUCore core;
