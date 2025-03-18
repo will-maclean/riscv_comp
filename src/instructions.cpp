@@ -51,7 +51,7 @@ SLLI::SLLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 int32_t SLLI::execute(CPUThread* thread){
 	thread->get_regs()->regi[this->reg_dest]
 		= thread->get_regs()->regi[this->reg_a]
-		  + this->imm;
+		  << this->imm;
 
 	return 1;
 }
@@ -63,9 +63,8 @@ SLTI::SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 {}
 
 int32_t SLTI::execute(CPUThread* thread){
-	thread->get_regs()->regi[this->reg_dest]
-		= thread->get_regs()->regi[this->reg_a]
-		  + this->imm;
+	
+	if((int32_t)this->reg_a < )
 
 	return 1;
 }

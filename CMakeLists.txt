@@ -34,8 +34,9 @@ FetchContent_MakeAvailable(googletest)
 
 # Create a test executable
 add_executable(test_riscv_comp
-    tests/test_cpu.cpp    # Test file(s) will go here
-    tests/test_ram.cpp    # Another test example
+    tests/test_cpu.cpp
+    tests/test_ram.cpp
+    tests/test_utils.cpp
 )
 
 # Link the test executable with Google Test

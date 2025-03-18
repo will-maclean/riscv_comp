@@ -37,7 +37,7 @@ void CPUThread::loop(){
 	this->running = true;
 
 	// while(this->running){
-	for(int i = 0; i < 5; i++){
+	for(int i = 0; i < 1; i++){
 		std::cout << "Loop " << i << std::endl;
 
 		this->registers.display();
@@ -51,6 +51,7 @@ void CPUThread::loop(){
 		this->registers.pc += pc_offset;
 
 		std::cout << std::endl;
+		this->registers.display();
 	}
 }
 

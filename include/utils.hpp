@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 
 // Gets the lower'th to the upper'th bits in x, inclusive on both sides
 // No error checking, so we assum:
@@ -8,11 +9,11 @@
 // 2. upper < 32
 // 3. upper >= lower
 inline uint32_t bits(uint32_t x, uint32_t lower, uint32_t upper) {
-	return (x >> lower) & (1 << (upper - lower) - 1);
+	return (x >> lower) & ((1 << (upper - lower + 1)) - 1);
 }
 
 inline uint32_t bit(uint32_t val, uint32_t pos){
-    return val & (1 << pos) == 1;
+    return (val >> pos) & 1;
 }
 
 inline uint32_t set_bits(
@@ -20,8 +21,16 @@ inline uint32_t set_bits(
     uint32_t lower, 
     uint32_t upper, 
     uint32_t val){
-    
-    return target & (
-        bits(val, lower, upper) << (upper - lower)
-    );
+
+
+
+	// 1. Save the unaffected bits
+	// (holy bit-level yuckiness)
+	uint32_t untouched = target & ~(((1 << (upper - lower + 1)) - 1) << lower);
+	
+	// 2. Build insert mask
+	uint32_t insert = bits(val, 0, upper - lower) << lower;
+
+	// 3. Insert
+	return untouched | insert;	
 }
