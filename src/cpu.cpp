@@ -36,8 +36,8 @@ CPURegisters* CPUThread::get_regs(){
 void CPUThread::loop(){
 	this->running = true;
 
-	// while(this->running){
-	for(int i = 0; i < 1; i++){
+	int i = 0;
+	while(this->running){
 		std::cout << "Loop " << i << std::endl;
 
 		this->registers.display();
@@ -51,8 +51,16 @@ void CPUThread::loop(){
 		this->registers.pc += pc_offset;
 
 		std::cout << std::endl;
-		this->registers.display();
+
+		if(instr_raw == (uint32_t)0) {
+			this->running = false;
+		}
+
+		i++;
 	}
+
+	std::cout << "Final register state:" << std::endl;
+	this->registers.display();
 }
 
 

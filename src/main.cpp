@@ -1,4 +1,6 @@
 #include "comp.hpp"
+#include "rv32i.hpp"
+
 #include <iostream>
 
 int main(){

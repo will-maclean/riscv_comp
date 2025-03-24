@@ -34,3 +34,13 @@ inline uint32_t set_bits(
 	// 3. Insert
 	return untouched | insert;	
 }
+
+int32_t imm_to_signed(uint32_t x){
+	int32_t x = (int32_t)bits(x, 0, 30);
+
+	if(bit(x, 31) != POSITIVE_BIT){
+		x *= -1;
+	}
+
+	return x;
+}

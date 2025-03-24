@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <map>
+#include <iostream>
 
 class CPUThread;
 
@@ -21,6 +22,13 @@ class AInstruction{
 		// to take CPUCore/CPUThread as input instead). Return the 
 		// _offset_ to be applied to the program pointer;
 		virtual int32_t execute(CPUThread* thread) = 0;
+
+		// Converts an instruction to a 32-bit code
+		// Not necessary to implement but useful
+		virtual uint32_t to_instruction(){
+			std::cout << "No to_instruction() defined" << std::endl;
+			return 0;
+		}
 };
 
 class UndefInstr : public AInstruction{
@@ -31,106 +39,19 @@ class UndefInstr : public AInstruction{
 		uint32_t instr;
 };
 
-class ADD : public AInstruction{
-	public:
-		ADD(uint32_t reg_a, uint32_t reg_b, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		uint32_t reg_b;
-		uint32_t reg_dest;
+const uint32_t POSITIVE_BIT = 0;
+
+enum ImmType {
+	R,
+	I,
+	S,
+	B,
+	U,
+	J
 };
 
+int32_t extract_imm(uint32_t instr, ImmType imm_type);
 
-class ADDI : public AInstruction{
-	public:
-		ADDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class SLLI : public AInstruction{
-	public:
-		SLLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class SLTI : public AInstruction{
-	public:
-		SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class SLTIU : public AInstruction{
-	public:
-		SLTIU(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class XORI : public AInstruction{
-	public:
-		XORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class ANDI : public AInstruction{
-	public:
-		ANDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class SRLI : public AInstruction{
-	public:
-		SRLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class SRAI : public AInstruction{
-	public:
-		SRAI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
-
-class ORI : public AInstruction{
-	public:
-		ORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-		int32_t execute(CPUThread* thread);
-	private:
-		uint32_t reg_a;
-		int32_t imm;
-		uint32_t reg_dest;
-};
 
 using instr_gen = std::function<std::unique_ptr<AInstruction>(uint32_t)>;
 
@@ -151,9 +72,6 @@ class ISA{
 	private:
 		std::map<uint32_t, instr_gen> instrs;
 };
-
-// Create the RV32i ISA
-std::unique_ptr<ISA> isa_rv32i();
 
 // The InstructionParser stores instruction sets. Can be loaded with 
 // multiple modules of instructions.

@@ -10,6 +10,7 @@ add_library(riscv_comp_lib
     src/cpu.cpp
     src/instructions.cpp
     src/ram.cpp
+    src/rv32i.cpp
 )
 
 add_executable(
