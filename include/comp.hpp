@@ -10,6 +10,7 @@
 class Comp{
 	public:
 		Comp(InstructionParser parser);
+		void start();
 
 	private:
 		RAM ram;

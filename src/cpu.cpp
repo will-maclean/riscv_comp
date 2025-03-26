@@ -24,7 +24,6 @@ CPUThread::CPUThread(RAM* ram, InstructionParser* parser)
 	this->ram = ram;
 	this->parser = parser;
 	this->registers.pc = 0u;
-	this->loop();
 }
 
 
@@ -32,6 +31,9 @@ CPURegisters* CPUThread::get_regs(){
 	return &(this->registers);
 }
 
+void CPUThread::start(){
+	this->loop();
+}
 
 void CPUThread::loop(){
 	this->running = true;
@@ -68,7 +70,14 @@ CPUCore::CPUCore(RAM* ram, InstructionParser* parser):
 	thread(CPUThread(ram, parser)){
 }
 
+void CPUCore::start(){
+	this->thread.start();
+}
 CPU::CPU(RAM* ram, InstructionParser parser) : 
 	parser(parser),	
 	core(CPUCore(ram, &parser))
 {}
+
+void CPU::start(){
+	this->core.start();
+}

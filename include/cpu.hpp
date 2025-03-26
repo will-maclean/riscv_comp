@@ -25,6 +25,7 @@ class CPUThread{
 		// Just a stub - at some point we'll need to pass in a 
 		// instruction pointer
 		CPUThread(RAM* ram, InstructionParser* parser);
+		void start();
 
 		CPURegisters* get_regs();
 	private:
@@ -40,6 +41,7 @@ class CPUThread{
 class CPUCore{
 	public:
 		CPUCore(RAM* ram, InstructionParser* parser);
+		void start();
 	private:
 		// just one thread for now, can support multi-threading later
 		CPUThread thread;
@@ -48,6 +50,7 @@ class CPUCore{
 class CPU{
 	public:
 		CPU(RAM* ram, InstructionParser parser);
+		void start();
 	private:
 		//just one thread for now, can support multi-core later
 		CPUCore core;
