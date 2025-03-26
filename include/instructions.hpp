@@ -50,8 +50,8 @@ enum ImmType {
 	J
 };
 
-int32_t extract_imm(uint32_t instr, ImmType imm_type);
-
+int32_t extract_imm_signed(uint32_t instr, ImmType imm_type);
+uint32_t extract_imm_unsigned(uint32_t instr, ImmType imm_type);
 
 using instr_gen = std::function<std::unique_ptr<AInstruction>(uint32_t)>;
 

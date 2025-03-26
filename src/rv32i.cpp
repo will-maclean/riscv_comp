@@ -10,9 +10,28 @@ ADD::ADD(uint32_t reg_a, uint32_t reg_b, uint32_t reg_dest)
 
 int32_t ADD::execute(CPUThread *thread)
 {
+	thread->get_regs()->regi[this->reg_dest] = 
+		thread->get_regs()->regi[this->reg_dest]
+		+ thread->get_regs()->regi[this->reg_dest];
+	
 	return 1;
 }
 
+SUB::SUB(uint32_t rs1, uint32_t rs2, uint32_t rsd)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd)
+{
+}
+
+int32_t SUB::execute(CPUThread *thread)
+{
+	thread->get_regs()->regi[this->rsd] = 
+		thread->get_regs()->regi[this->rs1]
+		- thread->get_regs()->regi[this->rs2];
+	
+	return 1;
+}
 uint32_t ADD::to_instruction()
 {
 	uint32_t res;
@@ -53,7 +72,7 @@ uint32_t ADDI::to_instruction()
 
 	return res;
 }
-SLLI::SLLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
+SLLI::SLLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
 	  reg_dest(reg_dest)
@@ -101,7 +120,7 @@ uint32_t SLTI::to_instruction()
 
 	return res;
 }
-SLTIU::SLTIU(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
+SLTIU::SLTIU(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
 	  reg_dest(reg_dest)
@@ -110,15 +129,7 @@ SLTIU::SLTIU(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 
 int32_t SLTIU::execute(CPUThread *thread)
 {
-	int32_t imm = (int32_t)bits(this->imm, 0, 30);
-	if (this->imm > 0)
-		imm |= POSITIVE_BIT << 31;
-	else
-	{
-		imm |= (~POSITIVE_BIT) << 31;
-	}
-
-	if ((uint32_t)this->reg_a < imm)
+	if ((uint32_t)this->reg_a < this->imm)
 	{
 		thread->get_regs()->regi[this->reg_dest] = 1;
 	}
@@ -129,8 +140,51 @@ int32_t SLTIU::execute(CPUThread *thread)
 
 	return 1;
 }
+SLTU::SLTU(uint32_t rs1, uint32_t rs2, uint32_t rsd)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd)
+{
+}
 
-XORI::XORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
+int32_t SLTU::execute(CPUThread *thread)
+{
+	uint32_t a = thread->get_regs()->regi[this->rs1];
+	uint32_t b = thread->get_regs()->regi[this->rs2];
+	if ((uint32_t)a < (uint32_t)b)
+	{
+		thread->get_regs()->regi[this->rsd] = 1;
+	}
+	else
+	{
+		thread->get_regs()->regi[this->rsd] = 0;
+	}
+
+	return 1;
+}
+SLT::SLT(uint32_t rs1, uint32_t rs2, uint32_t rsd)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd)
+{
+}
+
+int32_t SLTU::execute(CPUThread *thread)
+{
+	uint32_t a = thread->get_regs()->regi[this->rs1];
+	uint32_t b = thread->get_regs()->regi[this->rs2];
+	if (a < b)
+	{
+		thread->get_regs()->regi[this->rsd] = 1;
+	}
+	else
+	{
+		thread->get_regs()->regi[this->rsd] = 0;
+	}
+
+	return 1;
+}
+XORI::XORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
 	  reg_dest(reg_dest)
@@ -139,12 +193,12 @@ XORI::XORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 
 int32_t XORI::execute(CPUThread *thread)
 {
-	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] + this->imm;
+	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] ^ this->imm;
 
 	return 1;
 }
 
-ANDI::ANDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
+ANDI::ANDI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
 	  reg_dest(reg_dest)
@@ -153,12 +207,12 @@ ANDI::ANDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 
 int32_t ANDI::execute(CPUThread *thread)
 {
-	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] + this->imm;
+	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] & this->imm;
 
 	return 1;
 }
 
-SRLI::SRLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
+SRLI::SRLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
 	  reg_dest(reg_dest)
@@ -167,12 +221,31 @@ SRLI::SRLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 
 int32_t SRLI::execute(CPUThread *thread)
 {
-	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] + this->imm;
+	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] >> this->imm;
+
+	return 1;
+}
+SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t reg_dest)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd)
+{
+}
+
+int32_t SRA::execute(CPUThread *thread)
+{
+	uint32_t shift = thread->get_regs()->regi[this->rs2];
+	int32_t res = thread->get_regs()->regi[this->rs1] + shift;
+	uint32_t sign_bit = res >> 31;
+
+	res |= ((sign_bit << shift) - 1) << (32 - shift);
+
+	thread->get_regs()->regi[this->rsd] = res;
 
 	return 1;
 }
 
-SRAI::SRAI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
+SRAI::SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
 	  reg_dest(reg_dest)
@@ -181,12 +254,17 @@ SRAI::SRAI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 
 int32_t SRAI::execute(CPUThread *thread)
 {
-	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] + this->imm;
+	int32_t res = thread->get_regs()->regi[this->reg_a] + this->imm;
+	uint32_t sign_bit = res >> 31;
+
+	res |= ((sign_bit << this->imm) - 1) << (32 - this->imm);
+
+	thread->get_regs()->regi[this->reg_dest] = res;
 
 	return 1;
 }
 
-ORI::ORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
+ORI::ORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
 	  reg_dest(reg_dest)
@@ -195,7 +273,7 @@ ORI::ORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 
 int32_t ORI::execute(CPUThread *thread)
 {
-	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] + this->imm;
+	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] | this->imm;
 
 	return 1;
 }
@@ -242,6 +320,47 @@ int32_t AND::execute(CPUThread *thread)
 	return 1;
 }
 
+SLL::SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
+													 rs2(rs2),
+													 rsd(rsd)
+{
+}
+
+int32_t SLL::execute(CPUThread *thread)
+{
+	thread->get_regs()->regi[this->rsd] =
+		thread->get_regs()->regi[this->rs1] << thread->get_regs()->regi[this->rs2];
+
+	return 1;
+}
+SLL::SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
+													 rs2(rs2),
+													 rsd(rsd)
+{
+}
+
+int32_t SLL::execute(CPUThread *thread)
+{
+	thread->get_regs()->regi[this->rsd] =
+		thread->get_regs()->regi[this->rs1] << thread->get_regs()->regi[this->rs2];
+
+	return 1;
+}
+
+LUI::LUI(uint32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
+
+int32_t LUI::execute(CPUThread* thread) {
+	thread->get_regs()->regi[this->rsd] = imm;
+}
+
+AUIPC::AUIPC(int32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
+
+int32_t AUIPC::execute(CPUThread* thread) {
+	thread->get_regs()->regi[this->rsd] = thread->get_regs()->pc + this->imm;
+
+	return 1;
+}
+
 std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
 {
 	// by definition, but we can say it here explicitly as well
@@ -249,40 +368,41 @@ std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
 	uint32_t rd = bits(instr, 7, 11);
 	uint32_t funct3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
-	int32_t imm = extract_imm(instr, ImmType::I);
+	int32_t imm_s = extract_imm_signed(instr, ImmType::I);
+	uint32_t imm_u = extract_imm_unsigned(instr, ImmType::I);
 
-	uint32_t imm_top = bits(imm, 5, 11);
+	uint32_t imm_top = bits(imm_u, 5, 11);
 	switch (funct3)
 	{
 	case 0:
-		return std::make_unique<ADDI>(rs1, imm, rd);
+		return std::make_unique<ADDI>(rs1, imm_s, rd);
 
 	case 1:
 		// FIXME: need to check top bits in imm are 0
-		return std::make_unique<SLLI>(rs1, imm & 0b11111, rd);
+		return std::make_unique<SLLI>(rs1, imm_u & 0b11111, rd);
 	case 2:
-		return std::make_unique<SLTI>(rs1, imm, rd);
+		return std::make_unique<SLTI>(rs1, imm_s, rd);
 	case 3:
-		return std::make_unique<SLTIU>(rs1, imm, rd);
+		return std::make_unique<SLTIU>(rs1, imm_u, rd);
 	case 4:
-		return std::make_unique<XORI>(rs1, imm, rd);
+		return std::make_unique<XORI>(rs1, imm_u, rd);
 	case 5:
 		if (imm_top == 0x0u)
 		{
-			return std::make_unique<SRLI>(rs1, bits(imm, 0, 4), rd);
+			return std::make_unique<SRLI>(rs1, bits(imm_u, 0, 4), rd);
 		}
 		else if (imm_top == 0x20)
 		{
-			return std::make_unique<SRAI>(rs1, bits(imm, 0, 4), rd);
+			return std::make_unique<SRAI>(rs1, bits(imm_u, 0, 4), rd);
 		}
 		else
 		{
 			return std::make_unique<UndefInstr>(instr);
 		}
 	case 6:
-		return std::make_unique<ORI>(rs1, imm, rd);
+		return std::make_unique<ORI>(rs1, imm_u, rd);
 	case 7:
-		return std::make_unique<ANDI>(rs1, imm, rd);
+		return std::make_unique<ANDI>(rs1, imm_u, rd);
 	default:
 		return std::make_unique<UndefInstr>(instr);
 	}
@@ -371,7 +491,7 @@ std::unique_ptr<AInstruction> rv32i_branch(uint32_t instr)
 	uint32_t f3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
 	uint32_t rs2 = bits(instr, 20, 24);
-	uint32_t imm = extract_imm(instr, ImmType::B);
+	uint32_t imm = extract_imm_signed(instr, ImmType::B);
 
 	switch (f3)
 	{

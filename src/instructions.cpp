@@ -45,7 +45,7 @@ std::unique_ptr<AInstruction> InstructionParser::parse(uint32_t instruction){
 	return gen(instruction);
 }
 
-int32_t extract_imm(uint32_t instr, ImmType imm_type){
+int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 	int32_t res = 0;
 
 	switch(imm_type){
@@ -54,28 +54,60 @@ int32_t extract_imm(uint32_t instr, ImmType imm_type){
 			// have an immediate section
 			return res;
 		case(ImmType::I):
-			res = bits(instr, 20, 30);
+			res = (int32_t)bits(instr, 20, 30);
 			break;
 
 		case(ImmType::S):
 			res = bits(instr, 25, 30);
 			res = res << 5;
 			res = res | bits(instr, 7, 11);
-
 			break;
+
 		case(ImmType::B):
 			std::cout << "Unsupport imm type: B" << std::endl;
 			break;
 		case(ImmType::U):
-			std::cout << "Unsupport imm type: U" << std::endl;
+			res = bits(instr, 12, 30) << 12;
 			break;
 		case(ImmType::J):
 			std::cout << "Unsupport imm type: J" << std::endl;
 			break;
 	}
 
-	if(bit(instr, 31) != POSITIVE_BIT){
+	if (bit(instr, 31) != POSITIVE_BIT){
 		res *= -1;
+	}
+
+	return res;
+}
+
+uint32_t extract_imm_unsigned(uint32_t instr, ImmType imm_type){
+	uint32_t res = 0;
+
+	switch(imm_type){
+		case(ImmType::R):
+			// R type instructions don't actually 
+			// have an immediate section
+			return res;
+		case(ImmType::I):
+			res = bits(instr, 20, 31);
+			return res;
+
+		case(ImmType::S):
+			res = bits(instr, 25, 31);
+			res = res << 5;
+			res = res | bits(instr, 7, 11);
+			return res;
+
+		case(ImmType::B):
+			std::cout << "Unsupport imm type: B" << std::endl;
+			break;
+		case(ImmType::U):
+			res = bits(instr, 12, 31) << 12;
+			break;
+		case(ImmType::J):
+			std::cout << "Unsupport imm type: J" << std::endl;
+			break;
 	}
 
 	return res;

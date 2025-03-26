@@ -30,12 +30,12 @@ private:
 class SLLI : public AInstruction
 {
 public:
-	SLLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
+	SLLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t reg_a;
-	int32_t imm;
+	uint32_t imm;
 	uint32_t reg_dest;
 };
 
@@ -55,72 +55,72 @@ private:
 class SLTIU : public AInstruction
 {
 public:
-	SLTIU(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
+	SLTIU(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t reg_a;
-	int32_t imm;
+	uint32_t imm;
 	uint32_t reg_dest;
 };
 
 class XORI : public AInstruction
 {
 public:
-	XORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
+	XORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t reg_a;
-	int32_t imm;
+	uint32_t imm;
 	uint32_t reg_dest;
 };
 
 class ANDI : public AInstruction
 {
 public:
-	ANDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
+	ANDI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t reg_a;
-	int32_t imm;
+	uint32_t imm;
 	uint32_t reg_dest;
 };
 
 class SRLI : public AInstruction
 {
 public:
-	SRLI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
+	SRLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t reg_a;
-	int32_t imm;
+	uint32_t imm;
 	uint32_t reg_dest;
 };
 
 class SRAI : public AInstruction
 {
 public:
-	SRAI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
+	SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t reg_a;
-	int32_t imm;
+	uint32_t imm;
 	uint32_t reg_dest;
 };
 
 class ORI : public AInstruction
 {
 public:
-	ORI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
+	ORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t reg_a;
-	int32_t imm;
+	uint32_t imm;
 	uint32_t reg_dest;
 };
 
@@ -246,11 +246,11 @@ private:
 class AUIPC : public AInstruction
 {
 public:
-	AUIPC(uint32_t imm, uint32_t rsd);
+	AUIPC(int32_t imm, uint32_t rsd);
 	int32_t execute(CPUThread *thread) override;
 
 private:
-	uint32_t imm;
+	int32_t imm;
 	uint32_t rsd;
 };
 
