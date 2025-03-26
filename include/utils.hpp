@@ -36,11 +36,11 @@ inline uint32_t set_bits(
 }
 
 int32_t imm_to_signed(uint32_t x){
-	int32_t x = (int32_t)bits(x, 0, 30);
+	int32_t res = (int32_t)bits(x, 0, 30);
 
-	if(bit(x, 31) != POSITIVE_BIT){
-		x *= -1;
+	if(bit(res, 31) != POSITIVE_BIT){
+		res *= -1;
 	}
 
-	return x;
+	return res;
 }
