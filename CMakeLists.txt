@@ -5,14 +5,9 @@ project(riscv_comp)
 
 include_directories(include)
 
-add_library(riscv_comp_lib
-    src/comp.cpp
-    src/cpu.cpp
-    src/instructions.cpp
-    src/ram.cpp
-    src/rv32i.cpp
-    src/utils.cpp
-)
+file(GLOB SOURCES "src/*.cpp")
+
+add_library(riscv_comp_lib ${SOURCES})
 
 add_executable(
     riscv_comp
