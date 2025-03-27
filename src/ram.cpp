@@ -1,14 +1,9 @@
 #include "ram.hpp"
 #include "rv32i.hpp"
-
-#include <utils.hpp>
+#include "utils.hpp"
 
 RAM::RAM(){
 	this->mem = (uint32_t*)malloc(RAM_WORDS * sizeof(uint32_t));
-
-	this->mem[0] = ADDI(0, 42, 1).to_instruction();
-	this->mem[1] = ADDI(0, 41, 2).to_instruction();
-	this->mem[2] = SLTI(1, 44, 3).to_instruction();
 }
 
 RAM::RAM(std::string load_path){

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "cpu.hpp"
 #include "instructions.hpp"
 
@@ -389,7 +391,6 @@ private:
 class FENCE : public AInstruction
 {
 public:
-	FENCE();
 	int32_t execute(CPUThread *thread) override;
 };
 

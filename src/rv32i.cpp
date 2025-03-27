@@ -169,10 +169,10 @@ SLT::SLT(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 {
 }
 
-int32_t SLTU::execute(CPUThread *thread)
+int32_t SLT::execute(CPUThread *thread)
 {
-	uint32_t a = thread->get_regs()->regi[this->rs1];
-	uint32_t b = thread->get_regs()->regi[this->rs2];
+	int32_t a = thread->get_regs()->regi[this->rs1];
+	int32_t b = thread->get_regs()->regi[this->rs2];
 	if (a < b)
 	{
 		thread->get_regs()->regi[this->rsd] = 1;
@@ -225,7 +225,7 @@ int32_t SRLI::execute(CPUThread *thread)
 
 	return 1;
 }
-SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t reg_dest)
+SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
 	  rs2(rs2),
 	  rsd(rsd)
@@ -320,16 +320,16 @@ int32_t AND::execute(CPUThread *thread)
 	return 1;
 }
 
-SLL::SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
+SRL::SRL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
 													 rsd(rsd)
 {
 }
 
-int32_t SLL::execute(CPUThread *thread)
+int32_t SRL::execute(CPUThread *thread)
 {
 	thread->get_regs()->regi[this->rsd] =
-		thread->get_regs()->regi[this->rs1] << thread->get_regs()->regi[this->rs2];
+		thread->get_regs()->regi[this->rs1] >> thread->get_regs()->regi[this->rs2];
 
 	return 1;
 }
@@ -562,6 +562,21 @@ int32_t STORE::execute(CPUThread* thread){
 			break;
 	}
 
+	return 1;
+}
+
+int32_t FENCE::execute(CPUThread* thread){
+	std::cout << "Fence? Don't ask me" << std::endl;
+	return 1;
+}
+
+int32_t ECALL::execute(CPUThread* thread) {
+	std::cout << "ECALL" << std::endl;
+	return 1;
+}
+
+int32_t EBREAK::execute(CPUThread* thread) {
+	std::cout << "EBREAK" << std::endl;
 	return 1;
 }
 

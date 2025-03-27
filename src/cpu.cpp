@@ -65,6 +65,9 @@ void CPUThread::loop(){
 	this->registers.display();
 }
 
+RAM* CPUThread::get_ram(){
+	return this->ram;
+}
 
 CPUCore::CPUCore(RAM* ram, InstructionParser* parser):
 	thread(CPUThread(ram, parser)){

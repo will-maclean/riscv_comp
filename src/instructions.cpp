@@ -34,12 +34,11 @@ void InstructionParser::register_isa(std::unique_ptr<ISA> isa) {
 }
 
 std::unique_ptr<AInstruction> InstructionParser::parse(uint32_t instruction){
-	uint32_t opcode = bits(instruction, 0, 6);
-
-	if (this->instrs.count(opcode) == 0) {
+	if (instruction == 0) {
 		return std::make_unique<UndefInstr>(instruction);
 	}
 
+	uint32_t opcode = bits(instruction, 0, 6);
 	instr_gen gen = this->instrs.at(opcode);
 	
 	return gen(instruction);
