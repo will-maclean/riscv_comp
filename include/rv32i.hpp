@@ -257,51 +257,71 @@ private:
 class BEQ : public AInstruction
 {
 public:
-	BEQ(uint32_t rs1, uint32_t rs2, uint32_t imm);
+	BEQ(uint32_t rs1, uint32_t rs2, int32_t imm);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t rs1;
 	uint32_t rs2;
-	uint32_t imm;
+	int32_t imm;
 };
 
 class BNE : public AInstruction
 {
 public:
-	BNE(uint32_t rs1, uint32_t rs2, uint32_t imm);
+	BNE(uint32_t rs1, uint32_t rs2, int32_t imm);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t rs1;
 	uint32_t rs2;
-	uint32_t imm;
+	int32_t imm;
 };
 
 class BLT : public AInstruction
 {
 public:
-	BLT(uint32_t rs1, uint32_t rs2, uint32_t imm);
+	BLT(uint32_t rs1, uint32_t rs2, int32_t imm);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t rs1;
 	uint32_t rs2;
-	uint32_t imm;
+	int32_t imm;
 };
+class BGT : public AInstruction
+{
+public:
+	BGT(uint32_t rs1, uint32_t rs2, int32_t imm);
+	int32_t execute(CPUThread *thread) override;
 
+private:
+	uint32_t rs1;
+	uint32_t rs2;
+	int32_t imm;
+};
 class BGE : public AInstruction
 {
 public:
-	BGE(uint32_t rs1, uint32_t rs2, uint32_t imm);
+	BGE(uint32_t rs1, uint32_t rs2, int32_t imm);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t rs1;
 	uint32_t rs2;
-	uint32_t imm;
+	int32_t imm;
 };
+class BLE : public AInstruction
+{
+public:
+	BLE(uint32_t rs1, uint32_t rs2, int32_t imm);
+	int32_t execute(CPUThread *thread) override;
 
+private:
+	uint32_t rs1;
+	uint32_t rs2;
+	int32_t imm;
+};
 class BLTU : public AInstruction
 {
 public:
@@ -326,29 +346,43 @@ private:
 	uint32_t imm;
 };
 
+enum LoadType {
+	LB,
+	LH,
+	LW,
+	LBU,
+	LHU
+};
+
 class LOAD : public AInstruction
 {
 public:
-	LOAD(uint32_t base, uint32_t width, uint32_t dest, uint32_t offset);
+	LOAD(uint32_t base, LoadType type, uint32_t dest, int32_t offset);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t base;
-	uint32_t width;
+	LoadType type;
 	uint32_t dest;
-	uint32_t offset;
+	int32_t offset;
+};
+
+enum StoreType {
+	SB,
+	SH,
+	SW
 };
 
 class STORE : public AInstruction
 {
 public:
-	STORE(uint32_t src, uint32_t base, uint32_t width, uint32_t offset);
+	STORE(uint32_t src, uint32_t base, StoreType type, int32_t offset);
 	int32_t execute(CPUThread *thread) override;
 
 private:
 	uint32_t src;
 	uint32_t base;
-	uint32_t width;
+	StoreType type;
 	uint32_t offset;
 };
 

@@ -361,6 +361,210 @@ int32_t AUIPC::execute(CPUThread* thread) {
 	return 1;
 }
 
+
+BEQ::BEQ(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+
+int32_t BEQ::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] == thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+
+BNE::BNE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+
+int32_t BNE::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] != thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+
+BLT::BLT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+
+int32_t BLT::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] < thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+
+BGT::BGT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+
+int32_t BGT::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] > thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+BGE::BGE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+
+int32_t BGE::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] >= thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+BLE::BLE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+
+int32_t BLE::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] <= thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+BLTU::BLTU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+
+int32_t BLTU::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] < thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+
+BGEU::BGEU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
+{}
+int32_t BGEU::execute(CPUThread* thread) {
+	if(thread->get_regs()->regi[this->rs1] >= thread->get_regs()->regi[this->rs2]) {
+		return this->imm;
+	}
+
+	return 1;
+}
+
+LOAD::LOAD(uint32_t base, LoadType type, uint32_t dest, int32_t offset)
+	:base(base),
+	type(type),
+	dest(dest),
+	offset(offset)
+{}
+
+int32_t LOAD::execute(CPUThread* thread) {
+	uint32_t read_addr = (uint32_t)(thread->get_regs()->regi[this->base]
+		+ this->offset);
+	
+	uint32_t read_val = thread->get_ram()->get(read_addr);
+
+	int32_t store_val;
+	switch(this->type){
+		case LoadType::LB:
+			store_val = set_bits(
+				store_val,
+				0, 7,
+				thread->get_ram()->get(read_val + 0)
+			);
+			
+			store_val = sext(store_val, 7);
+
+			break;
+		case LoadType::LBU:
+			store_val = set_bits(
+				store_val,
+				0, 7,
+				thread->get_ram()->get(read_val + 0)
+			);
+			break;
+		case LoadType::LH:
+			store_val = set_bits(
+				store_val,
+				0, 7,
+				thread->get_ram()->get(read_val + 0)
+			);
+			store_val = set_bits(
+				store_val,
+				8, 15,
+				thread->get_ram()->get(read_val + 1)
+			);
+
+			store_val = sext(store_val, 15);
+			break;
+		case LoadType::LHU:
+			store_val = set_bits(
+				store_val,
+				0, 7,
+				thread->get_ram()->get(read_val + 0)
+			);
+			store_val = set_bits(
+				store_val,
+				8, 15,
+				thread->get_ram()->get(read_val + 1)
+			);
+			break;
+		case LoadType::LW:
+			store_val = set_bits(
+				store_val,
+				0, 7,
+				thread->get_ram()->get(read_val + 0)
+			);
+			store_val = set_bits(
+				store_val,
+				8, 15,
+				thread->get_ram()->get(read_val + 1)
+			);
+			store_val = set_bits(
+				store_val,
+				16, 23,
+				thread->get_ram()->get(read_val + 2)
+			);
+			store_val = set_bits(
+				store_val,
+				24, 31,
+				thread->get_ram()->get(read_val + 3)
+			);
+			break;
+	}
+
+	thread->get_regs()->regi[this->dest] = store_val;
+
+	return 1;
+}
+
+STORE::STORE(uint32_t src, uint32_t base, StoreType type, int32_t offset)
+	: src(src),
+	base(base),
+	type(type),
+	offset(offset)
+{}
+
+int32_t STORE::execute(CPUThread* thread){
+	uint32_t reg_val = thread->get_regs()->regi[this->src];
+
+	uint32_t write_addr = (uint32_t)(thread->get_regs()->regi[this->base]
+		+ this->offset);
+	
+	switch(this->type){
+		case StoreType::SB:
+			thread->get_ram()->set(write_addr + 0, bits(reg_val, 0, 7));
+			break;
+		case StoreType::SH:
+			thread->get_ram()->set(write_addr + 0, bits(reg_val, 0, 7));
+			thread->get_ram()->set(write_addr + 1, bits(reg_val, 8, 15));
+			break;
+		case StoreType::SW:
+			thread->get_ram()->set(write_addr + 0, bits(reg_val, 0, 7));
+			thread->get_ram()->set(write_addr + 1, bits(reg_val, 8, 15));
+			thread->get_ram()->set(write_addr + 2, bits(reg_val, 16, 23));
+			thread->get_ram()->set(write_addr + 3, bits(reg_val, 24, 31));
+			break;
+	}
+
+	return 1;
+}
+
 std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
 {
 	// by definition, but we can say it here explicitly as well
@@ -491,22 +695,23 @@ std::unique_ptr<AInstruction> rv32i_branch(uint32_t instr)
 	uint32_t f3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
 	uint32_t rs2 = bits(instr, 20, 24);
-	uint32_t imm = extract_imm_signed(instr, ImmType::B);
+	int32_t imm_s = extract_imm_signed(instr, ImmType::B);
+	uint32_t imm_u = extract_imm_unsigned(instr, ImmType::B);
 
 	switch (f3)
 	{
 	case 0:
-		return std::make_unique<BEQ>(rs1, rs2, imm);
+		return std::make_unique<BEQ>(rs1, rs2, imm_s);
 	case 1:
-		return std::make_unique<BNE>(rs1, rs2, imm);
+		return std::make_unique<BNE>(rs1, rs2, imm_s);
 	case 4:
-		return std::make_unique<BLT>(rs1, rs2, imm);
+		return std::make_unique<BLT>(rs1, rs2, imm_s);
 	case 5:
-		return std::make_unique<BGE>(rs1, rs2, imm);
+		return std::make_unique<BGE>(rs1, rs2, imm_s);
 	case 6:
-		return std::make_unique<BLTU>(rs1, rs2, imm);
+		return std::make_unique<BLTU>(rs1, rs2, imm_u);
 	case 7:
-		return std::make_unique<BGEU>(rs1, rs2, imm);
+		return std::make_unique<BGEU>(rs1, rs2, imm_u);
 	default:
 		return std::make_unique<UndefInstr>(instr);
 	}
@@ -514,15 +719,57 @@ std::unique_ptr<AInstruction> rv32i_branch(uint32_t instr)
 
 std::unique_ptr<AInstruction> rv32i_load(uint32_t instr)
 {
+	LoadType type;
+	switch(bits(instr, 12, 14)){
+		case 0:
+			type = LoadType::LB;
+			break;
+		case 1:
+			type = LoadType::LH;
+			break;
+		case 2:
+			type = LoadType::LW;
+			break;
+		case 4:
+			type = LoadType::LBU;
+			break;
+		case 5:
+			type = LoadType::LHU;
+			break;
+		default:
+			return std::make_unique<UndefInstr>(instr);
+	}
+
 	return std::make_unique<LOAD>(
-		bits(instr, 21, 31),
-		bits(instr, 7, 11));
+		bits(instr, 15, 19), 	// rs1
+		type,
+		bits(instr, 7, 11), 	// rd
+		extract_imm_signed(instr, ImmType::I)
+	);
 }
 std::unique_ptr<AInstruction> rv32i_store(uint32_t instr)
 {
+	StoreType type;
+	switch(bits(instr, 12, 14)) {
+		case 0:
+			type = StoreType::SB;
+			break;
+		case 1:
+			type = StoreType::SH;
+			break;
+		case 2:
+			type = StoreType::SW;
+			break;
+		default:
+			return std::make_unique<UndefInstr>(instr);
+	}
+
 	return std::make_unique<STORE>(
-		bits(instr, 21, 31),
-		bits(instr, 7, 11));
+		bits(instr, 20, 24),	// rs2 (src)
+		bits(instr, 15, 19), 	// rs1 (base)
+		type,
+		extract_imm_signed(instr, ImmType::S)
+	);
 }
 
 std::unique_ptr<AInstruction> rv32i_misc_mem(uint32_t instr)

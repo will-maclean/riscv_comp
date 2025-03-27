@@ -28,6 +28,8 @@ class CPUThread{
 		void start();
 
 		CPURegisters* get_regs();
+		RAM* get_ram();
+
 	private:
 		void loop();
 

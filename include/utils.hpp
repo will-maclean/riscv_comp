@@ -44,3 +44,9 @@ int32_t imm_to_signed(uint32_t x){
 
 	return res;
 }
+
+int32_t sext(uint32_t x, uint32_t pos){
+	uint32_t pos_bit = bit(x, pos);
+
+	return x | (pos << (32 - pos) - 1);
+}
