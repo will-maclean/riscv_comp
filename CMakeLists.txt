@@ -6,6 +6,7 @@ project(riscv_comp)
 include_directories(include)
 
 file(GLOB SOURCES "src/*.cpp")
+list(REMOVE_ITEM SOURCES "src/main.cpp")
 
 add_library(riscv_comp_lib ${SOURCES})
 
