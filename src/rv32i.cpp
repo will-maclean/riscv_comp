@@ -809,7 +809,7 @@ std::unique_ptr<ISA> isa_rv32i()
 {
 	std::unique_ptr<ISA> isa = std::make_unique<ISA>();
 
-	isa.get()->add_instr(0b000111, instr_gen(rv32i_misc_mem));
+	isa.get()->add_instr(0b0001111, instr_gen(rv32i_misc_mem));
 	isa.get()->add_instr(0b0010011, instr_gen(rv32i_op_imm));
 	isa.get()->add_instr(0b0010111, instr_gen(rv32i_auipc));
 	isa.get()->add_instr(0b0110011, instr_gen(rv32i_op));
