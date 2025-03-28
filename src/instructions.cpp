@@ -53,7 +53,7 @@ int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 			// have an immediate section
 			return res;
 		case(ImmType::I):
-			res = (int32_t)sext(bits(instr, 20, 31), 12);
+			res = (int32_t)sext(bits(instr, 20, 31), 11);
 			break;
 
 		case(ImmType::S):

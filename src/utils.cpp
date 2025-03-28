@@ -45,7 +45,10 @@ int32_t imm_to_signed(uint32_t x){
 }
 
 int32_t sext(uint32_t x, uint32_t pos){
-	uint32_t pos_bit = bit(x, pos);
+	
+	if(bit(x, pos)){
+		return x | ((1u << (32 - pos + 1)) - 2) << pos;
+	}
 
-	return x | ((pos << (32 - pos)) - 1);
+	return x;
 }

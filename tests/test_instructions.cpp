@@ -1,0 +1,17 @@
+#include <gtest/gtest.h>
+#include "instructions.hpp"
+
+
+TEST(UTILSTest, ExtractImmI){
+	// 12 imm bits, in 20-31
+	// lets load them with 0b111111111111
+	// = 4095 unsigned, or -1 signed
+	uint32_t instr = 0b11111111111100000000000000000000;
+
+	int32_t signed_res = extract_imm_signed(instr, ImmType::I);
+	uint32_t unsigned_res = extract_imm_unsigned(instr, ImmType::I);
+
+    EXPECT_EQ(signed_res, -1);
+    EXPECT_EQ(unsigned_res, 4095);
+
+}
