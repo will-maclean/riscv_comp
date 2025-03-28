@@ -16,6 +16,8 @@ class CPUThread;
 // store the necessary data for each command.
 class AInstruction{
 	public:
+		virtual ~AInstruction() = default;
+
 		// Probably the most important method in the whole application
 		//
 		// executes an instruction on the given CPU (might change this

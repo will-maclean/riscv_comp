@@ -34,7 +34,7 @@ int32_t SUB::execute(CPUThread *thread)
 }
 uint32_t ADD::to_instruction()
 {
-	uint32_t res;
+	uint32_t res = 0;
 
 	res = set_bits(res, 0, 6, 0b0010011);
 	res = set_bits(res, 7, 11, this->reg_dest);
@@ -62,7 +62,7 @@ int32_t ADDI::execute(CPUThread *thread)
 
 uint32_t ADDI::to_instruction()
 {
-	uint32_t res;
+	uint32_t res = 0;
 
 	res = set_bits(res, 0, 6, 0b0010011);
 	res = set_bits(res, 7, 11, this->reg_dest);
@@ -110,7 +110,7 @@ int32_t SLTI::execute(CPUThread *thread)
 
 uint32_t SLTI::to_instruction()
 {
-	uint32_t res;
+	uint32_t res = 0;
 
 	res = set_bits(res, 0, 6, 0b0010011);
 	res = set_bits(res, 7, 11, this->reg_dest);
@@ -351,6 +351,8 @@ LUI::LUI(uint32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
 
 int32_t LUI::execute(CPUThread* thread) {
 	thread->get_regs()->regi[this->rsd] = imm;
+
+	return 1;
 }
 
 AUIPC::AUIPC(int32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
@@ -459,7 +461,7 @@ int32_t LOAD::execute(CPUThread* thread) {
 	
 	uint32_t read_val = thread->get_ram()->get(read_addr);
 
-	int32_t store_val;
+	int32_t store_val = 0;
 	switch(this->type){
 		case LoadType::LB:
 			store_val = set_bits(
@@ -582,8 +584,6 @@ int32_t EBREAK::execute(CPUThread* thread) {
 
 std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
 {
-	// by definition, but we can say it here explicitly as well
-	uint32_t opcode = 0b0010011;
 	uint32_t rd = bits(instr, 7, 11);
 	uint32_t funct3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
@@ -631,7 +631,6 @@ std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
 
 std::unique_ptr<AInstruction> rv32i_op(uint32_t instr)
 {
-	uint32_t opcode = 0b0110011;
 	uint32_t rd = bits(instr, 7, 11);
 	uint32_t f3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
@@ -804,6 +803,8 @@ std::unique_ptr<AInstruction> rv32i_system(uint32_t instr)
 	{
 		return std::make_unique<EBREAK>();
 	}
+
+	return std::make_unique<UndefInstr>(instr);
 }
 std::unique_ptr<ISA> isa_rv32i()
 {

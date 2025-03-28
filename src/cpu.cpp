@@ -76,11 +76,23 @@ CPUCore::CPUCore(RAM* ram, InstructionParser* parser):
 void CPUCore::start(){
 	this->thread.start();
 }
+
+CPUThread* CPUCore::get_thread(){
+	return &this->thread;
+}
+
+CPUCore* CPU::get_core(){
+	return &this->core;
+}
+
 CPU::CPU(RAM* ram, InstructionParser parser) : 
 	parser(parser),	
-	core(CPUCore(ram, &parser))
+	core(CPUCore(ram, &this->parser))
 {}
 
+InstructionParser* CPU::get_parser(){
+	return &this->parser;
+}
 void CPU::start(){
 	this->core.start();
 }

@@ -44,3 +44,12 @@ TEST(UTILSTest, SetBits) {
 	res = 0b111100;
 	EXPECT_EQ(set_bits(x, 4, 5, set), res);
 }
+
+TEST(UTILSTest, ExtractImm){
+
+}
+
+TEST(UTILSTest, SEXT){
+	ASSERT_EQ(sext(1, 2), 1);
+	ASSERT_EQ(sext(1, 1), (int32_t)(-1u));
+}

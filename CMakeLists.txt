@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.30)
 set(CMAKE_CXX_STANDARD 17)
 
 project(riscv_comp)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 
 include_directories(include)
 
@@ -31,6 +32,7 @@ add_executable(test_riscv_comp
     tests/test_cpu.cpp
     tests/test_ram.cpp
     tests/test_utils.cpp
+    tests/test_rv32i.cpp
 )
 
 target_link_libraries(test_riscv_comp gtest gtest_main riscv_comp_lib)

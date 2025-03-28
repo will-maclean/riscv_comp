@@ -44,6 +44,8 @@ class CPUCore{
 	public:
 		CPUCore(RAM* ram, InstructionParser* parser);
 		void start();
+
+		CPUThread* get_thread();
 	private:
 		// just one thread for now, can support multi-threading later
 		CPUThread thread;
@@ -53,9 +55,12 @@ class CPU{
 	public:
 		CPU(RAM* ram, InstructionParser parser);
 		void start();
+
+		CPUCore* get_core();
+		InstructionParser* get_parser();
 	private:
+		InstructionParser parser;
 		//just one thread for now, can support multi-core later
 		CPUCore core;
 
-		InstructionParser parser;
 };

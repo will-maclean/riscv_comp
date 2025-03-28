@@ -34,11 +34,11 @@ void InstructionParser::register_isa(std::unique_ptr<ISA> isa) {
 }
 
 std::unique_ptr<AInstruction> InstructionParser::parse(uint32_t instruction){
-	if (instruction == 0) {
+	uint32_t opcode = bits(instruction, 0, 6);
+	if (this->instrs.count(opcode) == 0) {
 		return std::make_unique<UndefInstr>(instruction);
 	}
 
-	uint32_t opcode = bits(instruction, 0, 6);
 	instr_gen gen = this->instrs.at(opcode);
 	
 	return gen(instruction);
@@ -53,7 +53,7 @@ int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 			// have an immediate section
 			return res;
 		case(ImmType::I):
-			res = (int32_t)bits(instr, 20, 30);
+			res = (int32_t)sext(bits(instr, 20, 31), 12);
 			break;
 
 		case(ImmType::S):
@@ -71,10 +71,6 @@ int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 		case(ImmType::J):
 			std::cout << "Unsupport imm type: J" << std::endl;
 			break;
-	}
-
-	if (bit(instr, 31) != POSITIVE_BIT){
-		res *= -1;
 	}
 
 	return res;

@@ -12,6 +12,9 @@ class Comp{
 		Comp(InstructionParser parser);
 		void start();
 
+		RAM* get_ram();
+		CPU* get_cpu();
+
 	private:
 		RAM ram;
 		CPU cpu;
