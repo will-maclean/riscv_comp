@@ -11,8 +11,8 @@ ADD::ADD(uint32_t reg_a, uint32_t reg_b, uint32_t reg_dest)
 int32_t ADD::execute(CPUThread *thread)
 {
 	thread->get_regs()->regi[this->reg_dest] = 
-		thread->get_regs()->regi[this->reg_dest]
-		+ thread->get_regs()->regi[this->reg_dest];
+		thread->get_regs()->regi[this->reg_a]
+		+ thread->get_regs()->regi[this->reg_b];
 	
 	return 1;
 }
