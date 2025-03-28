@@ -96,7 +96,7 @@ SLTI::SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 
 int32_t SLTI::execute(CPUThread *thread)
 {
-	if (this->reg_a < this->imm)
+	if (thread->get_regs()->regi[this->reg_a] < this->imm)
 	{
 		thread->get_regs()->regi[this->reg_dest] = 1;
 	}
