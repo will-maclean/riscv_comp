@@ -52,7 +52,7 @@ void CPUThread::loop(){
 
 		int32_t pc_offset = instr->execute(this);
 		this->registers.pc += pc_offset;
-
+		// this->registers.display();
 		// std::cout << std::endl;
 
 		if(instr_raw == (uint32_t)0) {
@@ -62,7 +62,7 @@ void CPUThread::loop(){
 		i++;
 	}
 
-	// std::cout << "Final register state:" << std::endl;
+	std::cout << "Final register state: (" << i << " iters)" << std::endl;
 	this->registers.display();
 }
 
