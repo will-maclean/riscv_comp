@@ -2,6 +2,10 @@
 #include "rv32i.hpp"
 #include "utils.hpp"
 
+#include <fstream>
+#include <iterator>
+#include <algorithm>
+
 RAM::RAM(){
 	this->mem = (uint32_t*)malloc(RAM_WORDS * sizeof(uint32_t));
 
@@ -11,6 +15,24 @@ RAM::RAM(){
 }
 
 RAM::RAM(std::string load_path){
+	this->mem = (uint32_t*)malloc(RAM_WORDS * sizeof(uint32_t));
+
+	std::ifstream file( load_path, std::ios::binary );
+
+    file.seekg(0, std::ios::end);
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::vector<uint32_t> data(size / 4);
+    file.read(reinterpret_cast<char*>(data.data()), size);
+    file.close();
+
+    for (uint32_t value : data) {
+        std::cout << "0x" << std::hex << value << std::dec << std::endl;
+    }
+	for(int i = 0; i < data.size(); i++){
+		this->mem[i] = data.at(i);
+	}
 }
 
 RAM::~RAM(){
@@ -22,5 +44,8 @@ uint32_t RAM::get(uint32_t addr){
 }
 
 void RAM::set(uint32_t addr, uint32_t val) {
+	if(addr == 1234){
+		std::cout << val;
+	}
 	this->mem[addr] = val;
 }
