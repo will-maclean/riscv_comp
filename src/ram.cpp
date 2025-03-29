@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iterator>
 #include <algorithm>
+#include <vector>
 
 RAM::RAM(){
 	this->mem = (uint32_t*)malloc(RAM_WORDS * sizeof(uint32_t));
@@ -30,7 +31,7 @@ RAM::RAM(std::string load_path){
     for (uint32_t value : data) {
         std::cout << "0x" << std::hex << value << std::dec << std::endl;
     }
-	for(int i = 0; i < data.size(); i++){
+	for(long unsigned int i = 0; i < data.size(); i++){
 		this->mem[i] = data.at(i);
 	}
 }
