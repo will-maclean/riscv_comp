@@ -4,7 +4,8 @@
 #include "instructions.hpp"
 
 
-const uint32_t DEFAULT_START_PC = 0x10000;
+const uint32_t DEFAULT_START_PC = 0x1000;
+const uint32_t DEFAULT_START_SP = 0xFFFFFFF;
 
 
 // Has both int and float registers

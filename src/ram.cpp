@@ -14,19 +14,13 @@ RAM::RAM(){
 RAM::RAM(std::string load_path){
 	this->mem = (uint8_t*)malloc(RAM_WORDS * sizeof(uint32_t));
 
-	std::ifstream file( load_path, std::ios::binary );
+	std::ifstream file( load_path, std::ios::binary | std::ios::ate);
 
     file.seekg(0, std::ios::end);
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
-
-    std::vector<uint8_t> data(size);
-    file.read(reinterpret_cast<char*>(data.data()), size);
+    file.read(reinterpret_cast<char*>(this->mem), size);
     file.close();
-
-	for(long unsigned int i = 0; i < data.size(); i++){
-		this->mem[i] = data.at(i);
-	}
 }
 
 RAM::~RAM(){
@@ -52,7 +46,7 @@ uint8_t RAM::get_b(uint32_t addr){
 	return this->mem[addr];
 }
 void RAM::set_w(uint32_t addr, uint32_t val){
-	if(addr == 1234){
+	if(addr == 0xFFFFFFFF){
 		std::cout << val;
 	}
 	this->mem[addr+0] = bits(val,  0,  7);

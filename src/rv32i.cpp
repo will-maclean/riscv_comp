@@ -512,6 +512,22 @@ int32_t STORE::execute(CPUThread* thread){
 	return 4;
 }
 
+JAL::JAL(uint32_t rd, int32_t imm):rd(rd),imm(imm){}
+int32_t JAL::execute(CPUThread* thread){
+	thread->get_regs()->regi[this->rd] = thread->get_regs()->pc + 4;
+
+	return this->imm;
+}
+
+JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm):rs1(rs1),rd(rd),imm(imm){}
+int32_t JALR::execute(CPUThread* thread){
+	thread->get_regs()->regi[this->rd] = thread->get_regs()->pc + 4;
+
+	int32_t offset = this->imm + thread->get_regs()->regi[this->rs1];
+	offset ^= 1;
+	return offset;
+}
+
 int32_t FENCE::execute(CPUThread* thread){
 	std::cout << "Fence? Don't ask me" << std::endl;
 	return 4;
@@ -637,16 +653,19 @@ std::unique_ptr<AInstruction> rv32i_auipc(uint32_t instr)
 
 std::unique_ptr<AInstruction> rv32i_jal(uint32_t instr)
 {
-	return std::make_unique<AUIPC>(
-		bits(instr, 21, 31),
-		bits(instr, 7, 11));
+	return std::make_unique<JAL>(
+		bits(instr, 7, 11),
+		extract_imm_signed(instr, ImmType::J)
+	);
 }
 
 std::unique_ptr<AInstruction> rv32i_jalr(uint32_t instr)
 {
-	return std::make_unique<AUIPC>(
-		bits(instr, 21, 31),
-		bits(instr, 7, 11));
+	return std::make_unique<JALR>(
+		bits(instr, 15, 19),
+		bits(instr, 7, 11),
+		extract_imm_signed(instr, ImmType::I)
+	);
 }
 
 std::unique_ptr<AInstruction> rv32i_branch(uint32_t instr)
@@ -755,9 +774,11 @@ std::unique_ptr<ISA> isa_rv32i()
 {
 	std::unique_ptr<ISA> isa = std::make_unique<ISA>();
 
+	isa.get()->add_instr(0b0000011, instr_gen(rv32i_load));
 	isa.get()->add_instr(0b0001111, instr_gen(rv32i_misc_mem));
 	isa.get()->add_instr(0b0010011, instr_gen(rv32i_op_imm));
 	isa.get()->add_instr(0b0010111, instr_gen(rv32i_auipc));
+	isa.get()->add_instr(0b0100011, instr_gen(rv32i_store));
 	isa.get()->add_instr(0b0110011, instr_gen(rv32i_op));
 	isa.get()->add_instr(0b0110111, instr_gen(rv32i_lui));
 	isa.get()->add_instr(0b1101111, instr_gen(rv32i_jal));

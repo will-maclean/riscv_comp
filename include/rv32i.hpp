@@ -348,6 +348,25 @@ private:
 	uint32_t imm;
 };
 
+class JAL : public AInstruction{
+	public:
+		JAL(uint32_t rd, int32_t imm);
+		int32_t execute(CPUThread* thread);
+	private:
+        uint32_t rd;
+		int32_t imm;
+};
+
+class JALR : public AInstruction{
+	public:
+		JALR(uint32_t rs1, uint32_t rd, int32_t imm);
+		int32_t execute(CPUThread* thread);
+	private:
+		uint32_t rs1;
+        uint32_t rd;
+		int32_t imm;
+};
+
 enum LoadType {
 	LB,
 	LH,

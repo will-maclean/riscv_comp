@@ -5,6 +5,8 @@
 CPURegisters::CPURegisters() : pc(0) { 
 	std::fill(std::begin(regi), std::end(regi), 0);
 	std::fill(std::begin(regf), std::end(regf), 0.0f);
+	this->pc = DEFAULT_START_PC;
+	this->regi[2] = DEFAULT_START_SP;
 }
 
 void CPURegisters::display(){
@@ -23,7 +25,6 @@ CPUThread::CPUThread(RAM* ram, InstructionParser* parser)
 {
 	this->ram = ram;
 	this->parser = parser;
-	this->registers.pc = 0u;
 }
 
 
