@@ -44,7 +44,7 @@ void CPUThread::loop(){
 
 		this->registers.display();
 
-		uint32_t instr_raw = this->ram->get(this->registers.pc);
+		uint32_t instr_raw = this->ram->get_w(this->registers.pc);
 		std::cout << "Raw instruction: " << instr_raw << std::endl;
 
 		std::unique_ptr<AInstruction> instr = this->parser->parse(instr_raw);	

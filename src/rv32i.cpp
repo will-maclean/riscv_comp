@@ -14,7 +14,7 @@ int32_t ADD::execute(CPUThread *thread)
 		thread->get_regs()->regi[this->reg_a]
 		+ thread->get_regs()->regi[this->reg_b];
 	
-	return 1;
+	return 4;
 }
 
 SUB::SUB(uint32_t rs1, uint32_t rs2, uint32_t rsd)
@@ -30,7 +30,7 @@ int32_t SUB::execute(CPUThread *thread)
 		thread->get_regs()->regi[this->rs1]
 		- thread->get_regs()->regi[this->rs2];
 	
-	return 1;
+	return 4;
 }
 uint32_t ADD::to_instruction()
 {
@@ -57,7 +57,7 @@ int32_t ADDI::execute(CPUThread *thread)
 {
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] + this->imm;
 
-	return 1;
+	return 4;
 }
 
 uint32_t ADDI::to_instruction()
@@ -84,7 +84,7 @@ int32_t SLLI::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a]
 											   << this->imm;
 
-	return 1;
+	return 4;
 }
 
 SLTI::SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
@@ -105,7 +105,7 @@ int32_t SLTI::execute(CPUThread *thread)
 		thread->get_regs()->regi[this->reg_dest] = 0;
 	}
 
-	return 1;
+	return 4;
 }
 
 uint32_t SLTI::to_instruction()
@@ -138,7 +138,7 @@ int32_t SLTIU::execute(CPUThread *thread)
 		thread->get_regs()->regi[this->reg_dest] = 0;
 	}
 
-	return 1;
+	return 4;
 }
 SLTU::SLTU(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
@@ -160,7 +160,7 @@ int32_t SLTU::execute(CPUThread *thread)
 		thread->get_regs()->regi[this->rsd] = 0;
 	}
 
-	return 1;
+	return 4;
 }
 SLT::SLT(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
@@ -182,7 +182,7 @@ int32_t SLT::execute(CPUThread *thread)
 		thread->get_regs()->regi[this->rsd] = 0;
 	}
 
-	return 1;
+	return 4;
 }
 XORI::XORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
@@ -195,7 +195,7 @@ int32_t XORI::execute(CPUThread *thread)
 {
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] ^ this->imm;
 
-	return 1;
+	return 4;
 }
 
 ANDI::ANDI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
@@ -209,7 +209,7 @@ int32_t ANDI::execute(CPUThread *thread)
 {
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] & this->imm;
 
-	return 1;
+	return 4;
 }
 
 SRLI::SRLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
@@ -223,7 +223,7 @@ int32_t SRLI::execute(CPUThread *thread)
 {
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] >> this->imm;
 
-	return 1;
+	return 4;
 }
 SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
@@ -242,7 +242,7 @@ int32_t SRA::execute(CPUThread *thread)
 
 	thread->get_regs()->regi[this->rsd] = res;
 
-	return 1;
+	return 4;
 }
 
 SRAI::SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
@@ -261,7 +261,7 @@ int32_t SRAI::execute(CPUThread *thread)
 
 	thread->get_regs()->regi[this->reg_dest] = res;
 
-	return 1;
+	return 4;
 }
 
 ORI::ORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
@@ -275,7 +275,7 @@ int32_t ORI::execute(CPUThread *thread)
 {
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] | this->imm;
 
-	return 1;
+	return 4;
 }
 
 XOR::XOR(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
@@ -289,7 +289,7 @@ int32_t XOR::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->rsd] =
 		thread->get_regs()->regi[this->rs1] ^ thread->get_regs()->regi[this->rs2];
 
-	return 1;
+	return 4;
 }
 
 OR::OR(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
@@ -303,7 +303,7 @@ int32_t OR::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->rsd] =
 		thread->get_regs()->regi[this->rs1] | thread->get_regs()->regi[this->rs2];
 
-	return 1;
+	return 4;
 }
 
 AND::AND(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
@@ -317,7 +317,7 @@ int32_t AND::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->rsd] =
 		thread->get_regs()->regi[this->rs1] & thread->get_regs()->regi[this->rs2];
 
-	return 1;
+	return 4;
 }
 
 SRL::SRL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
@@ -331,7 +331,7 @@ int32_t SRL::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->rsd] =
 		thread->get_regs()->regi[this->rs1] >> thread->get_regs()->regi[this->rs2];
 
-	return 1;
+	return 4;
 }
 SLL::SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
@@ -344,7 +344,7 @@ int32_t SLL::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->rsd] =
 		thread->get_regs()->regi[this->rs1] << thread->get_regs()->regi[this->rs2];
 
-	return 1;
+	return 4;
 }
 
 LUI::LUI(uint32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
@@ -352,7 +352,7 @@ LUI::LUI(uint32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
 int32_t LUI::execute(CPUThread* thread) {
 	thread->get_regs()->regi[this->rsd] = imm;
 
-	return 1;
+	return 4;
 }
 
 AUIPC::AUIPC(int32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
@@ -360,7 +360,7 @@ AUIPC::AUIPC(int32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
 int32_t AUIPC::execute(CPUThread* thread) {
 	thread->get_regs()->regi[this->rsd] = thread->get_regs()->pc + this->imm;
 
-	return 1;
+	return 4;
 }
 
 
@@ -372,7 +372,7 @@ int32_t BEQ::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 
 BNE::BNE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
@@ -383,7 +383,7 @@ int32_t BNE::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 
 BLT::BLT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
@@ -394,7 +394,7 @@ int32_t BLT::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 
 BGT::BGT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
@@ -405,7 +405,7 @@ int32_t BGT::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 BGE::BGE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
@@ -415,7 +415,7 @@ int32_t BGE::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 BLE::BLE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
@@ -425,7 +425,7 @@ int32_t BLE::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 BLTU::BLTU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
@@ -435,7 +435,7 @@ int32_t BLTU::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 
 BGEU::BGEU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
@@ -445,7 +445,7 @@ int32_t BGEU::execute(CPUThread* thread) {
 		return this->imm;
 	}
 
-	return 1;
+	return 4;
 }
 
 LOAD::LOAD(uint32_t base, LoadType type, uint32_t dest, int32_t offset)
@@ -459,80 +459,29 @@ int32_t LOAD::execute(CPUThread* thread) {
 	uint32_t read_addr = (uint32_t)(thread->get_regs()->regi[this->base]
 		+ this->offset);
 	
-	uint32_t read_val = thread->get_ram()->get(read_addr);
-
 	int32_t store_val = 0;
 	switch(this->type){
 		case LoadType::LB:
-			store_val = set_bits(
-				store_val,
-				0, 7,
-				thread->get_ram()->get(read_val + 0)
-			);
-			
-			store_val = sext(store_val, 7);
+			store_val = sext(thread->get_ram()->get_b(read_addr), 7);
 
 			break;
 		case LoadType::LBU:
-			store_val = set_bits(
-				store_val,
-				0, 7,
-				thread->get_ram()->get(read_val + 0)
-			);
+			store_val = thread->get_ram()->get_b(read_addr);
 			break;
 		case LoadType::LH:
-			store_val = set_bits(
-				store_val,
-				0, 7,
-				thread->get_ram()->get(read_val + 0)
-			);
-			store_val = set_bits(
-				store_val,
-				8, 15,
-				thread->get_ram()->get(read_val + 1)
-			);
-
-			store_val = sext(store_val, 15);
+			store_val = sext(thread->get_ram()->get_h(read_addr), 15);
 			break;
 		case LoadType::LHU:
-			store_val = set_bits(
-				store_val,
-				0, 7,
-				thread->get_ram()->get(read_val + 0)
-			);
-			store_val = set_bits(
-				store_val,
-				8, 15,
-				thread->get_ram()->get(read_val + 1)
-			);
+			store_val = thread->get_ram()->get_h(read_addr);
 			break;
 		case LoadType::LW:
-			store_val = set_bits(
-				store_val,
-				0, 7,
-				thread->get_ram()->get(read_val + 0)
-			);
-			store_val = set_bits(
-				store_val,
-				8, 15,
-				thread->get_ram()->get(read_val + 1)
-			);
-			store_val = set_bits(
-				store_val,
-				16, 23,
-				thread->get_ram()->get(read_val + 2)
-			);
-			store_val = set_bits(
-				store_val,
-				24, 31,
-				thread->get_ram()->get(read_val + 3)
-			);
+			store_val = thread->get_ram()->get_w(read_addr);
 			break;
 	}
 
 	thread->get_regs()->regi[this->dest] = store_val;
 
-	return 1;
+	return 4;
 }
 
 STORE::STORE(uint32_t src, uint32_t base, StoreType type, int32_t offset)
@@ -550,36 +499,32 @@ int32_t STORE::execute(CPUThread* thread){
 	
 	switch(this->type){
 		case StoreType::SB:
-			thread->get_ram()->set(write_addr + 0, bits(reg_val, 0, 7));
+			thread->get_ram()->set_b(write_addr, reg_val);
 			break;
 		case StoreType::SH:
-			thread->get_ram()->set(write_addr + 0, bits(reg_val, 0, 7));
-			thread->get_ram()->set(write_addr + 1, bits(reg_val, 8, 15));
+			thread->get_ram()->set_h(write_addr, reg_val);
 			break;
 		case StoreType::SW:
-			thread->get_ram()->set(write_addr + 0, bits(reg_val, 0, 7));
-			thread->get_ram()->set(write_addr + 1, bits(reg_val, 8, 15));
-			thread->get_ram()->set(write_addr + 2, bits(reg_val, 16, 23));
-			thread->get_ram()->set(write_addr + 3, bits(reg_val, 24, 31));
+			thread->get_ram()->set_w(write_addr, reg_val);
 			break;
 	}
 
-	return 1;
+	return 4;
 }
 
 int32_t FENCE::execute(CPUThread* thread){
 	std::cout << "Fence? Don't ask me" << std::endl;
-	return 1;
+	return 4;
 }
 
 int32_t ECALL::execute(CPUThread* thread) {
 	std::cout << "ECALL" << std::endl;
-	return 1;
+	return 4;
 }
 
 int32_t EBREAK::execute(CPUThread* thread) {
 	std::cout << "EBREAK" << std::endl;
-	return 1;
+	return 4;
 }
 
 std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)

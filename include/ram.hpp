@@ -11,8 +11,12 @@ class RAM{
 		RAM(std::string load_path);
 		~RAM();
 
-		uint32_t get(uint32_t addr);
-		void set (uint32_t addr, uint32_t val);
+		uint32_t get_w(uint32_t addr);
+		uint16_t get_h(uint32_t addr);
+		uint8_t  get_b(uint32_t addr);
+		void set_w(uint32_t addr, uint32_t val);
+		void set_h(uint32_t addr, uint16_t val);
+		void set_b(uint32_t addr, uint8_t  val);
 	private:
-		uint32_t *mem;
+		uint8_t *mem;
 };
