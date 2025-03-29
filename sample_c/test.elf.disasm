@@ -22,7 +22,7 @@ Disassembly of section .text:
   30:	0007c783          	lbu	a5,0(a5)
   34:	fef405a3          	sb	a5,-21(s0)
   38:	fec42783          	lw	a5,-20(s0)
-  3c:	4d200713          	li	a4,1234
+  3c:	ffe00713          	li	a4,-2
   40:	feb44683          	lbu	a3,-21(s0)
   44:	00070293          	mv	t0,a4
   48:	00f28333          	add	t1,t0,a5

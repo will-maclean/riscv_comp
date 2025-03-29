@@ -1,4 +1,4 @@
-#define IO_ADDR 0xFFFFFFFF
+#define IO_ADDR 0xFFFFFFFE
 
 void print_s(char* s, int len){
     for(int i = 0; i < len; i++){

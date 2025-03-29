@@ -5,7 +5,7 @@
 
 
 const uint32_t DEFAULT_START_PC = 0x1000;
-const uint32_t DEFAULT_START_SP = 0xFFFFFFF;
+const uint32_t DEFAULT_START_SP = 0xFFFFFFE;
 
 
 // Has both int and float registers
