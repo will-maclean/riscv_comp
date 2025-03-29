@@ -16,9 +16,9 @@ void CPURegisters::display(){
 		std::cout << "IREG" << i << ": " << this->regi[i] << std::endl;
 	}
 
-	for(int i = 0; i < 32; i++){
-		std::cout << "FREG" << i << ": " << this->regf[i] << std::endl;
-	}
+	// for(int i = 0; i < 32; i++){
+	// 	std::cout << "FREG" << i << ": " << this->regf[i] << std::endl;
+	// }
 }
 
 CPUThread::CPUThread(RAM* ram, InstructionParser* parser)
@@ -41,19 +41,19 @@ void CPUThread::loop(){
 
 	int i = 0;
 	while(this->running){
-		std::cout << "Loop " << i << std::endl;
+		// std::cout << "Loop " << i << std::endl;
 
-		this->registers.display();
+		// this->registers.display();
 
 		uint32_t instr_raw = this->ram->get_w(this->registers.pc);
-		std::cout << "Raw instruction: " << instr_raw << std::endl;
+		// std::cout << "Raw instruction: " << instr_raw << std::endl;
 
 		std::unique_ptr<AInstruction> instr = this->parser->parse(instr_raw);	
 
 		int32_t pc_offset = instr->execute(this);
 		this->registers.pc += pc_offset;
 
-		std::cout << std::endl;
+		// std::cout << std::endl;
 
 		if(instr_raw == (uint32_t)0) {
 			this->running = false;
@@ -62,7 +62,7 @@ void CPUThread::loop(){
 		i++;
 	}
 
-	std::cout << "Final register state:" << std::endl;
+	// std::cout << "Final register state:" << std::endl;
 	this->registers.display();
 }
 

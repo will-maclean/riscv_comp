@@ -63,7 +63,11 @@ int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 			break;
 
 		case(ImmType::B):
-			std::cout << "Unsupport imm type: B" << std::endl;
+			res = set_bits(res, 11, 11, bits(instr, 7, 7));
+			res = set_bits(res, 1, 4, bits(instr, 8, 11));
+			res = set_bits(res, 5, 10, bits(instr, 25, 30));
+			res = set_bits(res, 12, 12, bits(instr, 31, 31));
+			res = sext(res, 11);
 			break;
 		case(ImmType::U):
 			res = bits(instr, 12, 30) << 12;
@@ -99,13 +103,16 @@ uint32_t extract_imm_unsigned(uint32_t instr, ImmType imm_type){
 			return res;
 
 		case(ImmType::B):
-			std::cout << "Unsupport imm type: B" << std::endl;
+			res = set_bits(res, 11, 11, bits(instr, 7, 7));
+			res = set_bits(res, 1, 4, bits(instr, 8, 11));
+			res = set_bits(res, 5, 10, bits(instr, 25, 30));
+			res = set_bits(res, 12, 12, bits(instr, 31, 31));
 			break;
 		case(ImmType::U):
 			res = bits(instr, 12, 31) << 12;
 			break;
 		case(ImmType::J):
-			std::cout << "Unsupport imm type: J" << std::endl;
+			std::cout << "Unsupport imm_u type: J" << std::endl;
 			break;
 	}
 
