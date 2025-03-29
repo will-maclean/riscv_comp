@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <memory>
+#include <sstream>
 
 UndefInstr::UndefInstr(uint32_t instr):instr(instr){}
 
@@ -13,6 +14,11 @@ int32_t UndefInstr::execute(CPUThread* thread){
 	return 1u;
 }
 
+std::string UndefInstr::to_string(){
+	std::stringstream s;
+	s << "unknown_instr " << this->instr;
+	return s.str();
+}
 
 bool ISA::add_instr(uint32_t opcode, instr_gen f){
 
@@ -57,9 +63,10 @@ int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 			break;
 
 		case(ImmType::S):
-			res = bits(instr, 25, 30);
+			res = bits(instr, 25, 31);
 			res = res << 5;
 			res = res | bits(instr, 7, 11);
+			res = sext(res, 10);
 			break;
 
 		case(ImmType::B):

@@ -50,6 +50,10 @@ void CPUThread::loop(){
 
 		std::unique_ptr<AInstruction> instr = this->parser->parse(instr_raw);	
 
+		std::cout << std::hex;
+		std::cout << "[INSTRUCTION (pc=0x" << this->registers.pc << ")] " << instr.get()->to_string() << std::endl;
+		std::cout << std::dec;
+
 		int32_t pc_offset = instr->execute(this);
 		this->registers.pc += pc_offset;
 		// this->registers.display();

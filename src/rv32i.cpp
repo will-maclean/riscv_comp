@@ -1,6 +1,8 @@
 #include "rv32i.hpp"
 #include "utils.hpp"
 
+#include <sstream>
+
 ADD::ADD(uint32_t reg_a, uint32_t reg_b, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  reg_b(reg_b),
@@ -15,6 +17,27 @@ int32_t ADD::execute(CPUThread *thread)
 		+ thread->get_regs()->regi[this->reg_b];
 	
 	return 4;
+}
+
+uint32_t ADD::to_instruction()
+{
+	uint32_t res = 0;
+
+	res = set_bits(res, 0, 6, 0b0010011);
+	res = set_bits(res, 7, 11, this->reg_dest);
+	res = set_bits(res, 12, 14, 0b000);
+	res = set_bits(res, 15, 19, this->reg_a);
+	res = set_bits(res, 20, 24, this->reg_b);
+	res = set_bits(res, 25, 31, 0b0000000);
+
+	return res;
+}
+
+std::string ADD::to_string(){
+	std::stringstream s;
+	s << "add r" << this->reg_dest << ", r" << this->reg_a << ", r" << this->reg_a;
+
+	return s.str();
 }
 
 SUB::SUB(uint32_t rs1, uint32_t rs2, uint32_t rsd)
@@ -32,18 +55,12 @@ int32_t SUB::execute(CPUThread *thread)
 	
 	return 4;
 }
-uint32_t ADD::to_instruction()
-{
-	uint32_t res = 0;
 
-	res = set_bits(res, 0, 6, 0b0010011);
-	res = set_bits(res, 7, 11, this->reg_dest);
-	res = set_bits(res, 12, 14, 0b000);
-	res = set_bits(res, 15, 19, this->reg_a);
-	res = set_bits(res, 20, 24, this->reg_b);
-	res = set_bits(res, 25, 31, 0b0000000);
+std::string SUB::to_string(){
+	std::stringstream s;
+	s << "sub r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
-	return res;
+	return s.str();
 }
 
 ADDI::ADDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
@@ -72,6 +89,14 @@ uint32_t ADDI::to_instruction()
 
 	return res;
 }
+
+std::string ADDI::to_string(){
+	std::stringstream s;
+	s << "addi r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
+}
+
 SLLI::SLLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -86,7 +111,12 @@ int32_t SLLI::execute(CPUThread *thread)
 
 	return 4;
 }
+std::string SLLI::to_string(){
+	std::stringstream s;
+	s << "slli r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
+	return s.str();
+}
 SLTI::SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -120,6 +150,14 @@ uint32_t SLTI::to_instruction()
 
 	return res;
 }
+
+std::string SLTI::to_string(){
+	std::stringstream s;
+	s << "slti r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
+}
+
 SLTIU::SLTIU(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -140,6 +178,14 @@ int32_t SLTIU::execute(CPUThread *thread)
 
 	return 4;
 }
+
+std::string SLTIU::to_string(){
+	std::stringstream s;
+	s << "sltiu r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
+}
+
 SLTU::SLTU(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
 	  rs2(rs2),
@@ -161,6 +207,13 @@ int32_t SLTU::execute(CPUThread *thread)
 	}
 
 	return 4;
+}
+
+std::string SLTU::to_string(){
+	std::stringstream s;
+	s << "sltu r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
 }
 SLT::SLT(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
@@ -184,6 +237,14 @@ int32_t SLT::execute(CPUThread *thread)
 
 	return 4;
 }
+
+std::string SLT::to_string(){
+	std::stringstream s;
+	s << "slt r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
+}
+
 XORI::XORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -198,6 +259,12 @@ int32_t XORI::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string XORI::to_string(){
+	std::stringstream s;
+	s << "xori r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
+}
 ANDI::ANDI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -212,6 +279,12 @@ int32_t ANDI::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string ANDI::to_string(){
+	std::stringstream s;
+	s << "andi r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
+}
 SRLI::SRLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -224,6 +297,13 @@ int32_t SRLI::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] >> this->imm;
 
 	return 4;
+}
+
+std::string SRLI::to_string(){
+	std::stringstream s;
+	s << "srli r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
 }
 SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
@@ -245,6 +325,12 @@ int32_t SRA::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string SRA::to_string(){
+	std::stringstream s;
+	s << "sra r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
+}
 SRAI::SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -264,6 +350,12 @@ int32_t SRAI::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string SRAI::to_string(){
+	std::stringstream s;
+	s << "srai r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
+}
 ORI::ORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
@@ -276,6 +368,13 @@ int32_t ORI::execute(CPUThread *thread)
 	thread->get_regs()->regi[this->reg_dest] = thread->get_regs()->regi[this->reg_a] | this->imm;
 
 	return 4;
+}
+
+std::string ORI::to_string(){
+	std::stringstream s;
+	s << "ori r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
+
+	return s.str();
 }
 
 XOR::XOR(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
@@ -292,6 +391,12 @@ int32_t XOR::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string XOR::to_string(){
+	std::stringstream s;
+	s << "xor r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
+}
 OR::OR(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 												   rs2(rs2),
 												   rsd(rsd)
@@ -306,6 +411,12 @@ int32_t OR::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string OR::to_string(){
+	std::stringstream s;
+	s << "or r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
+}
 AND::AND(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
 													 rsd(rsd)
@@ -320,6 +431,12 @@ int32_t AND::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string AND::to_string(){
+	std::stringstream s;
+	s << "and r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
+}
 SRL::SRL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
 													 rsd(rsd)
@@ -332,6 +449,13 @@ int32_t SRL::execute(CPUThread *thread)
 		thread->get_regs()->regi[this->rs1] >> thread->get_regs()->regi[this->rs2];
 
 	return 4;
+}
+
+std::string SRL::to_string(){
+	std::stringstream s;
+	s << "srl r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
 }
 SLL::SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
@@ -347,12 +471,24 @@ int32_t SLL::execute(CPUThread *thread)
 	return 4;
 }
 
+std::string SLL::to_string(){
+	std::stringstream s;
+	s << "sll r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
+
+	return s.str();
+}
 LUI::LUI(uint32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
 
 int32_t LUI::execute(CPUThread* thread) {
 	thread->get_regs()->regi[this->rsd] = imm;
 
 	return 4;
+}
+std::string LUI::to_string(){
+	std::stringstream s;
+	s << "lui r" << this->rsd << ", " << this->imm;
+
+	return s.str();
 }
 
 AUIPC::AUIPC(int32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
@@ -363,6 +499,12 @@ int32_t AUIPC::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string AUIPC::to_string(){
+	std::stringstream s;
+	s << "auipc r" << this->rsd << ", " << this->imm;
+
+	return s.str();
+}
 
 BEQ::BEQ(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
@@ -375,6 +517,12 @@ int32_t BEQ::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string BEQ::to_string(){
+	std::stringstream s;
+	s << "beq r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
+}
 BNE::BNE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
 
@@ -386,6 +534,12 @@ int32_t BNE::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string BNE::to_string(){
+	std::stringstream s;
+	s << "bne r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
+}
 BLT::BLT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
 
@@ -397,6 +551,12 @@ int32_t BLT::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string BLT::to_string(){
+	std::stringstream s;
+	s << "blt r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
+}
 BGT::BGT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
 
@@ -406,6 +566,13 @@ int32_t BGT::execute(CPUThread* thread) {
 	}
 
 	return 4;
+}
+
+std::string BGT::to_string(){
+	std::stringstream s;
+	s << "bgt r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
 }
 BGE::BGE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
@@ -417,6 +584,13 @@ int32_t BGE::execute(CPUThread* thread) {
 
 	return 4;
 }
+
+std::string BGE::to_string(){
+	std::stringstream s;
+	s << "bge r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
+}
 BLE::BLE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
 
@@ -426,6 +600,13 @@ int32_t BLE::execute(CPUThread* thread) {
 	}
 
 	return 4;
+}
+
+std::string BLE::to_string(){
+	std::stringstream s;
+	s << "ble r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
 }
 BLTU::BLTU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
@@ -438,6 +619,12 @@ int32_t BLTU::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string BLTU::to_string(){
+	std::stringstream s;
+	s << "bltu r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
+}
 BGEU::BGEU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
 {}
 int32_t BGEU::execute(CPUThread* thread) {
@@ -448,6 +635,12 @@ int32_t BGEU::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string BGEU::to_string(){
+	std::stringstream s;
+	s << "bgeu r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
+
+	return s.str();
+}
 LOAD::LOAD(uint32_t base, LoadType type, uint32_t dest, int32_t offset)
 	:base(base),
 	type(type),
@@ -484,6 +677,31 @@ int32_t LOAD::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string LOAD::to_string(){
+	std::stringstream s;
+
+	switch(this->type){
+		case LoadType::LB:
+			s << "lb ";
+			break;
+		case LoadType::LBU:
+			s << "lbu ";
+			break;
+		case LoadType::LH:
+			s << "lh ";
+			break;
+		case LoadType::LHU:
+			s << "lhu ";
+			break;
+		case LoadType::LW:
+			s << "lw ";
+			break;
+	}
+
+	s << "r" << this->dest << ", (" << this->offset << ")r" << this->base;
+
+	return s.str();
+}
 STORE::STORE(uint32_t src, uint32_t base, StoreType type, int32_t offset)
 	: src(src),
 	base(base),
@@ -511,6 +729,25 @@ int32_t STORE::execute(CPUThread* thread){
 
 	return 4;
 }
+std::string STORE::to_string(){
+	std::stringstream s;
+
+	switch(this->type){
+		case StoreType::SB:
+			s << "sb ";
+			break;
+		case StoreType::SH:
+			s << "sh ";
+			break;
+		case StoreType::SW:
+			s << "sw ";
+			break;
+	}
+
+	s << "r" << this->src << ", (" << this->offset << ")r" << this->base;
+
+	return s.str();
+}
 
 JAL::JAL(uint32_t rd, int32_t imm):rd(rd),imm(imm){}
 int32_t JAL::execute(CPUThread* thread){
@@ -519,6 +756,12 @@ int32_t JAL::execute(CPUThread* thread){
 	return this->imm;
 }
 
+std::string JAL::to_string(){
+	std::stringstream s;
+	s << "jal r" << this->rd << ", " << this->imm;
+
+	return s.str();
+}
 JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm):rs1(rs1),rd(rd),imm(imm){}
 int32_t JALR::execute(CPUThread* thread){
 	thread->get_regs()->regi[this->rd] = thread->get_regs()->pc + 4;
@@ -528,9 +771,20 @@ int32_t JALR::execute(CPUThread* thread){
 	return offset;
 }
 
+std::string JALR::to_string(){
+	std::stringstream s;
+	s << "jalr r" << this->rd << ", r" << this->rs1 << ", " << this->imm;
+
+	return s.str();
+}
+
 int32_t FENCE::execute(CPUThread* thread){
 	std::cout << "Fence? Don't ask me" << std::endl;
 	return 4;
+}
+
+std::string FENCE::to_string(){
+	return std::string("fence");
 }
 
 int32_t ECALL::execute(CPUThread* thread) {
@@ -538,11 +792,17 @@ int32_t ECALL::execute(CPUThread* thread) {
 	return 4;
 }
 
+std::string ECALL::to_string(){
+	return std::string("ecall");
+}
 int32_t EBREAK::execute(CPUThread* thread) {
 	std::cout << "EBREAK" << std::endl;
 	return 4;
 }
 
+std::string EBREAK::to_string(){
+	return std::string("ebreak");
+}
 std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
 {
 	uint32_t rd = bits(instr, 7, 11);

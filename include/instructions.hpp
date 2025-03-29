@@ -5,6 +5,7 @@
 #include <memory>
 #include <map>
 #include <iostream>
+#include <string>
 
 class CPUThread;
 
@@ -31,12 +32,15 @@ class AInstruction{
 			std::cout << "No to_instruction() defined" << std::endl;
 			return 0;
 		}
+
+		virtual std::string to_string() = 0;
 };
 
 class UndefInstr : public AInstruction{
 	public:
 		UndefInstr(uint32_t instr);
 		int32_t execute(CPUThread* thread);
+		std::string to_string();
 	private:
 		uint32_t instr;
 };
