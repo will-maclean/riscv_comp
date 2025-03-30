@@ -5,11 +5,10 @@ void print_s(char* s, int len){
         char c = s[i];
 
         __asm__ volatile (
-            "addi t0, %0, 0\n"   // Load IO_ADDR into register t0
-            "sb %1, 0(t0)"       // Store byte: store c at address calculated in t1
-            : // No outputs
-            : "r" (IO_ADDR), "r" (c) // IO_ADDR, c (character)
-            : "t0" // Clobbered registers
+            "sb %1, 0(%0)"
+            :
+            : "r" (IO_ADDR), "r" (c)
+            :
         );
     }
 }
