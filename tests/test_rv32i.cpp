@@ -42,16 +42,16 @@ TEST(RV32ITEST, ADDI_PARSER) {
 
 TEST(RV32ITEST, ADD_POSITIVE) {
     Comp* comp = make_comp();
-    comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[1] = 1;
-    comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[2] = 2;
+    comp->get_cpu()->get_core()->get_thread()->get_regs()->set_ri(1, 1);
+    comp->get_cpu()->get_core()->get_thread()->get_regs()->set_ri(2, 2);
 
     ADD add_instr = ADD(1, 2, 3);
 
     add_instr.execute(comp->get_cpu()->get_core()->get_thread());
 
-    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[1], 1);
-    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[2], 2);
-    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[3], 3);
+    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->get_ri(1), 1);
+    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->get_ri(2), 2);
+    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->get_ri(3), 3);
 
     delete comp;
 }
@@ -59,16 +59,16 @@ TEST(RV32ITEST, ADD_POSITIVE) {
 
 TEST(RV32ITEST, ADD_NEGATIVE) {
     Comp* comp = make_comp();
-    comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[1] = 1;
-    comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[2] = -2;
+    comp->get_cpu()->get_core()->get_thread()->get_regs()->set_ri(1, 1);
+    comp->get_cpu()->get_core()->get_thread()->get_regs()->set_ri(2, -2);
 
     ADD add_instr = ADD(1, 2, 3);
 
     add_instr.execute(comp->get_cpu()->get_core()->get_thread());
 
-    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[1], 1);
-    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[2], -2);
-    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->regi[3], -1);
+    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->get_ri(1), 1);
+    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->get_ri(2), -2);
+    EXPECT_EQ(comp->get_cpu()->get_core()->get_thread()->get_regs()->get_ri(3), -1);
 
     delete comp;
 }

@@ -21,6 +21,14 @@ void CPURegisters::display(){
 	// }
 }
 
+void CPURegisters::set_ri(uint32_t r, int32_t val){
+	if (r > 0)
+		this->regi[r] = val;
+}
+
+int32_t CPURegisters::get_ri(uint32_t r){
+	return this->regi[r];
+}
 CPUThread::CPUThread(RAM* ram, InstructionParser* parser)
 {
 	this->ram = ram;

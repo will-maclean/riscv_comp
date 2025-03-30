@@ -9,15 +9,18 @@ const uint32_t DEFAULT_START_SP = 0xFFFFFFE;
 
 
 // Has both int and float registers
-struct CPURegisters{
+class CPURegisters{
+public:
+	CPURegisters();
+	void display();
+	void set_ri(uint32_t r, int32_t val);
+	int32_t get_ri(uint32_t r);
 	uint32_t pc;
+private:
 	int32_t regi[32];
 
 	//FIXME: force this to be a 32-bit floating point register
 	float regf[32];
-
-	CPURegisters();
-	void display();
 };
 
 
