@@ -1,15 +1,16 @@
 #include <iostream>
 #include "instructions.hpp"
 #include "cpu.hpp"
+#include "consts.hpp"
 
-CPURegisters::CPURegisters() : pc(0) { 
+CPURegisters::CPURegisters() { 
 	std::fill(std::begin(regi), std::end(regi), 0);
 	std::fill(std::begin(regf), std::end(regf), 0.0f);
 	this->pc = DEFAULT_START_PC;
 	this->regi[2] = DEFAULT_START_SP;
 }
 
-void CPURegisters::display(){
+void CPURegisters::display() const{
 	std::cout << "PC: " << this->pc << std::endl;
 
 	for(int i = 0; i < 32; i++){
@@ -26,7 +27,7 @@ void CPURegisters::set_ri(uint32_t r, int32_t val){
 		this->regi[r] = val;
 }
 
-int32_t CPURegisters::get_ri(uint32_t r){
+int32_t CPURegisters::get_ri(uint32_t r) const{
 	return this->regi[r];
 }
 CPUThread::CPUThread(RAM* ram, InstructionParser* parser)
