@@ -2,7 +2,7 @@
 
 void print_s(char* s, int len){
     for(int i = 0; i < len; i++){
-        char c = s[i];
+        volatile char c = s[i];
 
         __asm__ volatile (
             "sb %1, 0(%0)"
