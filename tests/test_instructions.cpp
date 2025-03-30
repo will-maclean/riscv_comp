@@ -15,3 +15,10 @@ TEST(UTILSTest, ExtractImmI){
     EXPECT_EQ(unsigned_res, 4095);
 
 }
+TEST(UTILSTest, ExtractImmJ){
+	uint32_t instr = 0x03c0006f;
+
+	int32_t signed_res = extract_imm_signed(instr, ImmType::J);
+
+    EXPECT_EQ(signed_res, 60);
+}

@@ -80,10 +80,10 @@ int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 			res = bits(instr, 12, 30) << 12;
 			break;
 		case(ImmType::J):
-			res = set_bits(res, 12, 19, bits(instr, 12, 19));
-			res = set_bits(res, 11, 11, bits(instr, 20, 20));
-			res = set_bits(res, 1, 10, bits(instr, 21, 30));
-			res = set_bits(res, 20, 20, bits(instr, 31, 31));
+			res |= bit(instr, 31) << 19;
+			res |= bits(instr, 21, 30) << 1;
+			res |= bit(instr, 20) << 10;
+			res |= bits(instr, 12, 19) << 11;
 			res = sext(res, 19);
 			break;
 	}
