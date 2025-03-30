@@ -7,6 +7,5 @@ def get_entry_point(elf_file_path):
         print(elf.header)
         return entry_point
 
-# Example usage
 entry_point = get_entry_point("test.elf")
 print(f"The entry point is at address 0x{entry_point:x}")
