@@ -2,3 +2,4 @@
 
 _start:
     jal main
+    ebreak
