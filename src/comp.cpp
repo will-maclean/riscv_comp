@@ -1,7 +1,7 @@
 #include "comp.hpp"
 
 Comp::Comp(InstructionParser parser) :
-    ram(RAM("/home/will/code/riscv_comp/sample_c/test.elf")),
+    ram(RAM("/home/will/code/riscv_comp/sample_c/test.bin")),
     cpu(CPU(&this->ram, parser)){
 }
 
