@@ -34,16 +34,6 @@ uint32_t set_bits(
 	return untouched | insert;	
 }
 
-int32_t imm_to_signed(uint32_t x){
-	int32_t res = (int32_t)bits(x, 0, 30);
-
-	if(bit(res, 31) != POSITIVE_BIT){
-		res *= -1;
-	}
-
-	return res;
-}
-
 int32_t sext(uint32_t x, uint32_t pos){
 	
 	if(bit(x, pos)){

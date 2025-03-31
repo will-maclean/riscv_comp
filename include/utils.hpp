@@ -18,7 +18,6 @@ uint32_t set_bits(
     uint32_t upper, 
     uint32_t val);
 
-int32_t imm_to_signed(uint32_t x);
 int32_t sext(uint32_t x, uint32_t pos);
 
 //FIXME: Can probably take something more efficient than a std::string
