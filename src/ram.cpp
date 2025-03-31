@@ -7,6 +7,7 @@
 #include <iterator>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 RAM::RAM(){
 	this->mem = (uint8_t*)malloc(RAM_WORDS * sizeof(uint32_t));
@@ -48,7 +49,8 @@ uint8_t RAM::get_b(uint32_t addr){
 }
 void RAM::set_w(uint32_t addr, uint32_t val){
 	if(addr == IO_ADDR){
-		//TODO
+		std::string s = std::to_string(val);
+		write_to_stdout(s);
 	}
 	this->mem[addr+0] = bits(val,  0,  7);
 	this->mem[addr+1] = bits(val,  8, 15);

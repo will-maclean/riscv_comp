@@ -78,12 +78,11 @@ void CPUThread::loop(){
 
 	if(instr_res.flow == ExeFlow::ERROR){
 		std::cout << "Thread ended unsuccessfully" << std::endl;
+		std::cout << "Final register state: (" << i << " iters)" << std::endl;
+		this->registers.display();
 	} else {
 		std::cout << "Thread ended successfully" << std::endl;
 	}
-
-	std::cout << "Final register state: (" << i << " iters)" << std::endl;
-	this->registers.display();
 }
 
 RAM* CPUThread::get_ram(){

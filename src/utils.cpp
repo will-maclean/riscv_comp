@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <iostream>
+#include <fstream>
+#include <consts.hpp>
 
 // Gets the lower'th to the upper'th bits in x, inclusive on both sides
 // No error checking, so we assum:
@@ -44,5 +46,16 @@ int32_t sext(uint32_t x, uint32_t pos){
 }
 
 void write_to_stdout(std::string s){
+	std::ofstream file;
+	file.open(IO_OUT_FILE, std::ios::app);
+	file << s;
+	file.close();
+
 	std::cout << "[STDOUT]: " << s << std::endl;
+}
+
+void clear_stdout(){
+	std::ofstream file;
+	file.open(IO_OUT_FILE, std::ios::trunc);
+	file.close();
 }

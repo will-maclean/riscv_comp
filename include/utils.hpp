@@ -24,3 +24,5 @@ int32_t sext(uint32_t x, uint32_t pos);
 //FIXME: I imagine this could probably be stored somewhere smarter, especially
 //	when fleshed out a bit. For now, it can just live in utils.
 void write_to_stdout(std::string s);
+
+void clear_stdout();
