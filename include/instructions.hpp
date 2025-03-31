@@ -9,6 +9,20 @@
 
 class CPUThread;
 
+enum ExeFlow{
+	CONTINUE,
+	STOP,
+	ERROR,
+};
+
+struct InstrResult{
+	int32_t pc_offset;
+	ExeFlow flow;
+
+	InstrResult(uint32_t pc_offset, ExeFlow flow) : pc_offset(pc_offset), flow(flow) {}
+	explicit InstrResult(uint32_t pc_offset) : pc_offset(pc_offset), flow(ExeFlow::CONTINUE) {}
+};
+
 // All instructions will implement AInstruction
 // 
 // Honestly, I'd love to use Rust's enums here, as we can define both the
@@ -24,7 +38,7 @@ class AInstruction{
 		// executes an instruction on the given CPU (might change this
 		// to take CPUCore/CPUThread as input instead). Return the 
 		// _offset_ to be applied to the program pointer;
-		virtual int32_t execute(CPUThread* thread) = 0;
+		virtual InstrResult execute(CPUThread* thread) = 0;
 
 		// Converts an instruction to a 32-bit code
 		// Not necessary to implement but useful
@@ -39,7 +53,7 @@ class AInstruction{
 class UndefInstr : public AInstruction{
 	public:
 		UndefInstr(uint32_t instr);
-		int32_t execute(CPUThread* thread);
+		InstrResult execute(CPUThread* thread);
 		std::string to_string();
 	private:
 		uint32_t instr;

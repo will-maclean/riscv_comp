@@ -49,6 +49,7 @@ void CPUThread::loop(){
 	this->running = true;
 
 	int i = 0;
+	InstrResult instr_res(0, ExeFlow::CONTINUE);
 	while(this->running){
 		// std::cout << "Loop " << i << std::endl;
 
@@ -63,16 +64,22 @@ void CPUThread::loop(){
 		std::cout << "[INSTRUCTION (pc=0x" << this->registers.pc << ")] " << instr.get()->to_string() << std::endl;
 		std::cout << std::dec;
 
-		int32_t pc_offset = instr->execute(this);
-		this->registers.pc += pc_offset;
+		instr_res = instr->execute(this);
+		this->registers.pc += instr_res.pc_offset;
 		// this->registers.display();
 		// std::cout << std::endl;
 
-		if(instr_raw == (uint32_t)0) {
+		if(instr_raw == (uint32_t)0 || instr_res.flow != ExeFlow::CONTINUE){
 			this->running = false;
 		}
 
 		i++;
+	}
+
+	if(instr_res.flow == ExeFlow::ERROR){
+		std::cout << "Thread ended unsuccessfully" << std::endl;
+	} else {
+		std::cout << "Thread ended successfully" << std::endl;
 	}
 
 	std::cout << "Final register state: (" << i << " iters)" << std::endl;

@@ -8,10 +8,10 @@
 
 UndefInstr::UndefInstr(uint32_t instr):instr(instr){}
 
-int32_t UndefInstr::execute(CPUThread* thread){
+InstrResult UndefInstr::execute(CPUThread* thread){
 	std::cout << "Unknown instruction: " << this->instr << std::endl;
 
-	return 1u;
+	return InstrResult(0, ExeFlow::ERROR);
 }
 
 std::string UndefInstr::to_string(){

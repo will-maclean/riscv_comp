@@ -9,7 +9,7 @@ class ADD : public AInstruction
 {
 public:
 	ADD(uint32_t reg_a, uint32_t reg_b, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	uint32_t to_instruction() override;
 	std::string to_string() override;
 
@@ -23,7 +23,7 @@ class ADDI : public AInstruction
 {
 public:
 	ADDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	uint32_t to_instruction() override;
 	std::string to_string() override;
 
@@ -37,7 +37,7 @@ class SLLI : public AInstruction
 {
 public:
 	SLLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -50,7 +50,7 @@ class SLTI : public AInstruction
 {
 public:
 	SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	uint32_t to_instruction() override;
 	std::string to_string() override;
 
@@ -64,7 +64,7 @@ class SLTIU : public AInstruction
 {
 public:
 	SLTIU(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -77,7 +77,7 @@ class XORI : public AInstruction
 {
 public:
 	XORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -90,7 +90,7 @@ class ANDI : public AInstruction
 {
 public:
 	ANDI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -103,7 +103,7 @@ class SRLI : public AInstruction
 {
 public:
 	SRLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -116,7 +116,7 @@ class SRAI : public AInstruction
 {
 public:
 	SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -129,7 +129,7 @@ class ORI : public AInstruction
 {
 public:
 	ORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -142,7 +142,7 @@ class SLL : public AInstruction
 {
 public:
 	SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -155,7 +155,7 @@ class SLT : public AInstruction
 {
 public:
 	SLT(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -168,7 +168,7 @@ class SLTU : public AInstruction
 {
 public:
 	SLTU(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -181,7 +181,7 @@ class XOR : public AInstruction
 {
 public:
 	XOR(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -194,7 +194,7 @@ class SRL : public AInstruction
 {
 public:
 	SRL(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -207,7 +207,7 @@ class OR : public AInstruction
 {
 public:
 	OR(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -220,7 +220,7 @@ class AND : public AInstruction
 {
 public:
 	AND(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -233,7 +233,7 @@ class SUB : public AInstruction
 {
 public:
 	SUB(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -246,7 +246,7 @@ class SRA : public AInstruction
 {
 public:
 	SRA(uint32_t rs1, uint32_t rs2, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -259,7 +259,7 @@ class LUI : public AInstruction
 {
 public:
 	LUI(uint32_t imm, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -271,7 +271,7 @@ class AUIPC : public AInstruction
 {
 public:
 	AUIPC(int32_t imm, uint32_t rsd);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -283,7 +283,7 @@ class BEQ : public AInstruction
 {
 public:
 	BEQ(uint32_t rs1, uint32_t rs2, int32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -296,7 +296,7 @@ class BNE : public AInstruction
 {
 public:
 	BNE(uint32_t rs1, uint32_t rs2, int32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -309,7 +309,7 @@ class BLT : public AInstruction
 {
 public:
 	BLT(uint32_t rs1, uint32_t rs2, int32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -321,7 +321,7 @@ class BGT : public AInstruction
 {
 public:
 	BGT(uint32_t rs1, uint32_t rs2, int32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -333,7 +333,7 @@ class BGE : public AInstruction
 {
 public:
 	BGE(uint32_t rs1, uint32_t rs2, int32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -345,7 +345,7 @@ class BLE : public AInstruction
 {
 public:
 	BLE(uint32_t rs1, uint32_t rs2, int32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -357,7 +357,7 @@ class BLTU : public AInstruction
 {
 public:
 	BLTU(uint32_t rs1, uint32_t rs2, uint32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -370,7 +370,7 @@ class BGEU : public AInstruction
 {
 public:
 	BGEU(uint32_t rs1, uint32_t rs2, uint32_t imm);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -382,7 +382,7 @@ private:
 class JAL : public AInstruction{
 	public:
 		JAL(uint32_t rd, int32_t imm);
-		int32_t execute(CPUThread* thread) override;
+		InstrResult execute(CPUThread* thread) override;
 	std::string to_string() override;
 	private:
         uint32_t rd;
@@ -392,7 +392,7 @@ class JAL : public AInstruction{
 class JALR : public AInstruction{
 	public:
 		JALR(uint32_t rs1, uint32_t rd, int32_t imm);
-		int32_t execute(CPUThread* thread) override;
+		InstrResult execute(CPUThread* thread) override;
 	std::string to_string() override;
 	private:
 		uint32_t rs1;
@@ -412,7 +412,7 @@ class LOAD : public AInstruction
 {
 public:
 	LOAD(uint32_t base, LoadType type, uint32_t dest, int32_t offset);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -432,7 +432,7 @@ class STORE : public AInstruction
 {
 public:
 	STORE(uint32_t src, uint32_t base, StoreType type, int32_t offset);
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 
 private:
@@ -445,21 +445,21 @@ private:
 class FENCE : public AInstruction
 {
 public:
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 };
 
 class ECALL : public AInstruction
 {
 public:
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 };
 
 class EBREAK : public AInstruction
 {
 public:
-	int32_t execute(CPUThread *thread) override;
+	InstrResult execute(CPUThread *thread) override;
 	std::string to_string() override;
 };
 // Create the RV32i ISA
