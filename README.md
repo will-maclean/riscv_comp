@@ -56,4 +56,7 @@ cd sample_c
 ./build.sh
 ```
 
+Note the the ELF file format is not currently supported - we compile into binary
+format.
+
 You can then rerun `build/riscv_comp` (no rebuild required).
