@@ -48,7 +48,7 @@ uint8_t RAM::get_b(uint32_t addr){
 }
 void RAM::set_w(uint32_t addr, uint32_t val){
 	if(addr == IO_ADDR){
-		std::cout << (char)val;
+		//TODO
 	}
 	this->mem[addr+0] = bits(val,  0,  7);
 	this->mem[addr+1] = bits(val,  8, 15);
@@ -58,14 +58,16 @@ void RAM::set_w(uint32_t addr, uint32_t val){
 
 void RAM::set_h(uint32_t addr, uint16_t val){
 	if(addr == IO_ADDR){
-		std::cout << (char)val;
+		//TODO
 	}
 	this->mem[addr+0] = bits(val,  0,  7);
 	this->mem[addr+1] = bits(val,  8, 15);
 }
 void RAM::set_b(uint32_t addr, uint8_t val){
 	if(addr == IO_ADDR){
-		std::cout << (char)val;
+		char c = (char)val;
+		std::string s(&c);
+		write_to_stdout(s);
 	}
 	this->mem[addr+0] = val;
 }

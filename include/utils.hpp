@@ -20,3 +20,8 @@ uint32_t set_bits(
 
 int32_t imm_to_signed(uint32_t x);
 int32_t sext(uint32_t x, uint32_t pos);
+
+//FIXME: Can probably take something more efficient than a std::string
+//FIXME: I imagine this could probably be stored somewhere smarter, especially
+//	when fleshed out a bit. For now, it can just live in utils.
+void write_to_stdout(std::string s);

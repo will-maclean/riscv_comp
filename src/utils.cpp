@@ -52,3 +52,7 @@ int32_t sext(uint32_t x, uint32_t pos){
 
 	return x;
 }
+
+void write_to_stdout(std::string s){
+	std::cout << "[STDOUT]: " << s << std::endl;
+}
