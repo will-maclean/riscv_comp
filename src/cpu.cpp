@@ -69,7 +69,7 @@ void CPUThread::loop(){
 		// this->registers.display();
 		// std::cout << std::endl;
 
-		if(instr_raw.instr.instr_64 == 0 || instr_res.flow != ExeFlow::CONTINUE){
+		if(instr_raw.instr.instr_32 == 0 || instr_res.flow != ExeFlow::CONTINUE){
 			this->running = false;
 		}
 

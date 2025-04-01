@@ -392,12 +392,14 @@ class JAL : public AInstruction{
 class JALR : public AInstruction{
 	public:
 		JALR(uint32_t rs1, uint32_t rd, int32_t imm);
+		JALR(uint32_t rs1, uint32_t rd, int32_t imm, int32_t pc_offset);
 		InstrResult execute(CPUThread* thread) override;
 	std::string to_string() override;
 	private:
 		uint32_t rs1;
         uint32_t rd;
 		int32_t imm;
+		int32_t pc_offset;
 };
 
 enum LoadType {

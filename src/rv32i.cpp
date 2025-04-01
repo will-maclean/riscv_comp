@@ -741,9 +741,12 @@ std::string JAL::to_string(){
 
 	return s.str();
 }
-JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm):rs1(rs1),rd(rd),imm(imm){}
+JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm)
+	:rs1(rs1),rd(rd),imm(imm),pc_offset(4){}
+JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm, int32_t pc_offset)
+	:rs1(rs1),rd(rd),imm(imm),pc_offset(pc_offset){}
 InstrResult JALR::execute(CPUThread* thread){
-	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + 4);
+	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + this->pc_offset);
 
     int32_t offset = this->imm + thread->get_regs()->get_ri(this->rs1) - thread->get_regs()->pc;
     offset &= ~1;
