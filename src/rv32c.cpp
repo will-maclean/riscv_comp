@@ -28,15 +28,25 @@ std::unique_ptr<AInstruction> rv32i_c0(RVUnparsedInstr unparsed_instr){
                 return std::make_unique<UndefInstr>(unparsed_instr);
             }
 
-            return std::make_unique<ADDI>(rs2+8, imm, 2, 2);
+            return std::make_unique<ADDI>(2, imm, rs2+8, 2);
 
         case 0x2:
+            // c.lw
             imm = 0;
             imm |= bit(instr, 5) << 6;
             imm |= bit(instr, 6) << 2;
             imm |= bits(instr, 10, 12) << 3;
             
             return std::make_unique<LOAD>(rs1+8, LoadType::LW, rs2+8, imm, 2);
+        
+        case 0x6:
+            // c.sw
+            imm = 0;
+            imm |= bit(instr, 5) << 6;
+            imm |= bit(instr, 6) << 2;
+            imm |= bits(instr, 10, 12) << 3;
+
+            return std::make_unique<STORE>(rs2+8, rs1+8, StoreType::SW, imm, 2);
 
         default:
             return std::make_unique<UndefInstr>(unparsed_instr);
@@ -79,11 +89,11 @@ std::unique_ptr<AInstruction> rv32i_c1(RVUnparsedInstr unparsed_instr){
         case 0:
             // c.addi
             imm = 0;
-            imm |= bits(instr, 0, 4);
+            imm |= bits(instr, 2, 6);
             imm |= bit(instr, 12) << 5;
             imm = sext(imm, 5);
 
-            if(imm != 0 && rsd == 0){
+            if(rsd != 0 && imm == 0){
                 return std::make_unique<UndefInstr>(unparsed_instr);
             }
 

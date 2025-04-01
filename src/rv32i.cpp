@@ -37,7 +37,7 @@ uint32_t ADD::to_instruction() {
 
 std::string ADD::to_string() {
 	std::stringstream s;
-	s << "add r" << this->reg_dest << ", r" << this->reg_a << ", r" << this->reg_a;
+	s << "add r" << this->reg_dest << ", r" << this->reg_a << ", r" << this->reg_b;
 
 	return s.str();
 }
