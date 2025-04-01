@@ -55,7 +55,7 @@ void CPUThread::loop(){
 
 		// this->registers.display();
 
-		uint32_t instr_raw = this->ram->get_w(this->registers.pc);
+		RVUnparsedInstr instr_raw = this->ram->get_rvinstr(this->registers.pc);
 		// std::cout << "Raw instruction: " << instr_raw << std::endl;
 
 		std::unique_ptr<AInstruction> instr = this->parser->parse(instr_raw);	
@@ -69,7 +69,7 @@ void CPUThread::loop(){
 		// this->registers.display();
 		// std::cout << std::endl;
 
-		if(instr_raw == (uint32_t)0 || instr_res.flow != ExeFlow::CONTINUE){
+		if(instr_raw.instr.instr_64 == 0 || instr_res.flow != ExeFlow::CONTINUE){
 			this->running = false;
 		}
 

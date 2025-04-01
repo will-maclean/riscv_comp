@@ -783,13 +783,19 @@ InstrResult EBREAK::execute(CPUThread* thread) {
 std::string EBREAK::to_string(){
 	return std::string("ebreak");
 }
-std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_op_imm(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	uint32_t rd = bits(instr, 7, 11);
 	uint32_t funct3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
-	int32_t imm_s = extract_imm_signed(instr, ImmType::I);
-	uint32_t imm_u = extract_imm_unsigned(instr, ImmType::I);
+	int32_t imm_s = extract_imm_signed32(instr, ImmType::I);
+	uint32_t imm_u = extract_imm_unsigned32(instr, ImmType::I);
 
 	uint32_t imm_top = bits(imm_u, 5, 11);
 	switch (funct3)
@@ -817,21 +823,27 @@ std::unique_ptr<AInstruction> rv32i_op_imm(uint32_t instr)
 		}
 		else
 		{
-			return std::make_unique<UndefInstr>(instr);
+			return std::make_unique<UndefInstr>(unparsed_instr);
 		}
 	case 6:
 		return std::make_unique<ORI>(rs1, imm_u, rd);
 	case 7:
 		return std::make_unique<ANDI>(rs1, imm_u, rd);
 	default:
-		return std::make_unique<UndefInstr>(instr);
+		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 
-	return std::make_unique<UndefInstr>(instr);
+	return std::make_unique<UndefInstr>(unparsed_instr);
 }
 
-std::unique_ptr<AInstruction> rv32i_op(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_op(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	uint32_t rd = bits(instr, 7, 11);
 	uint32_t f3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
@@ -860,7 +872,7 @@ std::unique_ptr<AInstruction> rv32i_op(uint32_t instr)
 		case 7:
 			return std::make_unique<AND>(rs1, rs2, rd);
 		default:
-			return std::make_unique<UndefInstr>(instr);
+			return std::make_unique<UndefInstr>(unparsed_instr);
 		}
 	case 0x20:
 		switch (f3)
@@ -870,51 +882,83 @@ std::unique_ptr<AInstruction> rv32i_op(uint32_t instr)
 		case 5:
 			return std::make_unique<SRA>(rs1, rs2, rd);
 		default:
-			return std::make_unique<UndefInstr>(instr);
+			return std::make_unique<UndefInstr>(unparsed_instr);
 		}
 	default:
-		return std::make_unique<UndefInstr>(instr);
+		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 }
 
-std::unique_ptr<AInstruction> rv32i_lui(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_lui(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	return std::make_unique<LUI>(
 		bits(instr, 21, 31),
 		bits(instr, 7, 11));
 }
 
-std::unique_ptr<AInstruction> rv32i_auipc(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_auipc(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
+
 	return std::make_unique<AUIPC>(
 		bits(instr, 21, 31),
 		bits(instr, 7, 11));
 }
 
-std::unique_ptr<AInstruction> rv32i_jal(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_jal(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	return std::make_unique<JAL>(
 		bits(instr, 7, 11),
-		extract_imm_signed(instr, ImmType::J)
+		extract_imm_signed32(instr, ImmType::J)
 	);
 }
 
-std::unique_ptr<AInstruction> rv32i_jalr(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_jalr(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
+
 	return std::make_unique<JALR>(
 		bits(instr, 15, 19),
 		bits(instr, 7, 11),
-		extract_imm_signed(instr, ImmType::I)
+		extract_imm_signed32(instr, ImmType::I)
 	);
 }
 
-std::unique_ptr<AInstruction> rv32i_branch(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_branch(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	uint32_t f3 = bits(instr, 12, 14);
 	uint32_t rs1 = bits(instr, 15, 19);
 	uint32_t rs2 = bits(instr, 20, 24);
-	int32_t imm_s = extract_imm_signed(instr, ImmType::B);
-	uint32_t imm_u = extract_imm_unsigned(instr, ImmType::B);
+	int32_t imm_s = extract_imm_signed32(instr, ImmType::B);
+	uint32_t imm_u = extract_imm_unsigned32(instr, ImmType::B);
 
 	switch (f3)
 	{
@@ -931,12 +975,18 @@ std::unique_ptr<AInstruction> rv32i_branch(uint32_t instr)
 	case 7:
 		return std::make_unique<BGEU>(rs1, rs2, imm_u);
 	default:
-		return std::make_unique<UndefInstr>(instr);
+		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 }
 
-std::unique_ptr<AInstruction> rv32i_load(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_load(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	LoadType type;
 	switch(bits(instr, 12, 14)){
 		case 0:
@@ -955,18 +1005,24 @@ std::unique_ptr<AInstruction> rv32i_load(uint32_t instr)
 			type = LoadType::LHU;
 			break;
 		default:
-			return std::make_unique<UndefInstr>(instr);
+			return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 
 	return std::make_unique<LOAD>(
 		bits(instr, 15, 19), 	// rs1
 		type,
 		bits(instr, 7, 11), 	// rd
-		extract_imm_signed(instr, ImmType::I)
+		extract_imm_signed32(instr, ImmType::I)
 	);
 }
-std::unique_ptr<AInstruction> rv32i_store(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_store(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	StoreType type;
 	switch(bits(instr, 12, 14)) {
 		case 0:
@@ -979,24 +1035,33 @@ std::unique_ptr<AInstruction> rv32i_store(uint32_t instr)
 			type = StoreType::SW;
 			break;
 		default:
-			return std::make_unique<UndefInstr>(instr);
+			return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 
 	return std::make_unique<STORE>(
 		bits(instr, 20, 24),	// rs2 (src)
 		bits(instr, 15, 19), 	// rs1 (base)
 		type,
-		extract_imm_signed(instr, ImmType::S)
+		extract_imm_signed32(instr, ImmType::S)
 	);
 }
 
-std::unique_ptr<AInstruction> rv32i_misc_mem(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_misc_mem(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
 	return std::make_unique<FENCE>();
 }
 
-std::unique_ptr<AInstruction> rv32i_system(uint32_t instr)
+std::unique_ptr<AInstruction> rv32i_system(RVUnparsedInstr unparsed_instr)
 {
+	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+	{
+		return std::make_unique<UndefInstr>(unparsed_instr);
+	}
+	uint32_t instr = unparsed_instr.instr.instr_32;
 	uint32_t non_op = bits(instr, 7, 31);
 
 	if (non_op == 0x0)
@@ -1008,7 +1073,7 @@ std::unique_ptr<AInstruction> rv32i_system(uint32_t instr)
 		return std::make_unique<EBREAK>();
 	}
 
-	return std::make_unique<UndefInstr>(instr);
+	return std::make_unique<UndefInstr>(unparsed_instr);
 }
 std::unique_ptr<ISA> isa_rv32i()
 {

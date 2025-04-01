@@ -9,6 +9,54 @@
 
 class CPUThread;
 
+enum RVUnparsedInstrType{
+	INSTR16,
+	INSTR32,
+	INSTR64,
+};
+
+union RVUnparsedInstrUnion{
+	uint16_t instr_16;
+	uint32_t instr_32;
+	uint64_t instr_64;
+};
+
+// RVUnparsedInstr
+// Contains the instruction stored at a particular address. `type` stores the
+// type of instruction (16, 32, or 64 bits). The `instr` union stores the
+// actual instruction.
+struct RVUnparsedInstr{
+	RVUnparsedInstrType type;
+	RVUnparsedInstrUnion instr;
+
+	uint32_t opcode(){
+		switch(this->type){
+			case INSTR16:
+				return this->instr.instr_16 & 0x3F;
+			case INSTR32:
+				return this->instr.instr_32 & 0x7F;
+			case INSTR64:
+				return this->instr.instr_64 & 0x7F;
+		}
+		return 0;
+	}
+
+	std::string to_str(){
+		switch(this->type){
+			case INSTR16:
+				return std::to_string(this->instr.instr_16);
+			case INSTR32:
+				return std::to_string(this->instr.instr_32);
+			case INSTR64:
+				return std::to_string(this->instr.instr_64);
+		}
+		return "Unknown instruction";
+	}
+
+	RVUnparsedInstr(RVUnparsedInstrType type, RVUnparsedInstrUnion instr)
+		: type(type), instr(instr) {}
+};
+
 enum ExeFlow{
 	CONTINUE,
 	STOP,
@@ -52,14 +100,14 @@ class AInstruction{
 
 class UndefInstr : public AInstruction{
 	public:
-		UndefInstr(uint32_t instr);
+		UndefInstr(RVUnparsedInstr instr);
 		InstrResult execute(CPUThread* thread);
 		std::string to_string();
 	private:
-		uint32_t instr;
+		RVUnparsedInstr instr;
 };
 
-const uint32_t POSITIVE_BIT = 0;
+const uint8_t POSITIVE_BIT = 0;
 
 enum ImmType {
 	R,
@@ -70,10 +118,10 @@ enum ImmType {
 	J
 };
 
-int32_t extract_imm_signed(uint32_t instr, ImmType imm_type);
-uint32_t extract_imm_unsigned(uint32_t instr, ImmType imm_type);
+int32_t extract_imm_signed32(uint32_t instr, ImmType imm_type);
+uint32_t extract_imm_unsigned32(uint32_t instr, ImmType imm_type);
 
-using instr_gen = std::function<std::unique_ptr<AInstruction>(uint32_t)>;
+using instr_gen = std::function<std::unique_ptr<AInstruction>(RVUnparsedInstr)>;
 
 // Instruction Set Assembly
 class ISA{
@@ -83,14 +131,14 @@ class ISA{
 		// Adds instructions to the ISA
 		//
 		// return bool is the result of trying to add the instruction
-		bool add_instr(uint32_t opcode, instr_gen f);
+		bool add_instr(uint8_t opcode, instr_gen f);
 		
-		std::map<uint32_t, instr_gen>* get_map(){
+		std::map<uint8_t, instr_gen>* get_map(){
 			return &this->instrs;
 		}
 
 	private:
-		std::map<uint32_t, instr_gen> instrs;
+		std::map<uint8_t, instr_gen> instrs;
 };
 
 // The InstructionParser stores instruction sets. Can be loaded with 
@@ -98,7 +146,7 @@ class ISA{
 class InstructionParser{
 public:
 	void register_isa(std::unique_ptr<ISA> isa);
-	std::unique_ptr<AInstruction> parse(uint32_t instruction);
+	std::unique_ptr<AInstruction> parse(RVUnparsedInstr instruction);
 private:
-	std::map<uint32_t, instr_gen> instrs;
+	std::map<uint8_t, instr_gen> instrs;
 };

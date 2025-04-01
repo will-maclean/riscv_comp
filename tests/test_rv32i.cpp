@@ -19,22 +19,27 @@ TEST(RV32ITEST, ADDI_TO_INSTR){
     EXPECT_EQ(bits(instr, 7, 11), 3);                   // dest reg
     EXPECT_EQ(bits(instr, 12, 14), 0);                  // ADDI code
     EXPECT_EQ(bits(instr, 15, 19), 1);                  // src reg
-    EXPECT_EQ(extract_imm_signed(instr, ImmType::I), 2);// immediate
+    EXPECT_EQ(extract_imm_signed32(instr, ImmType::I), 2);// immediate
 }
 
 TEST(RV32ITEST, ADDI_PARSER) {
     Comp* comp = make_comp();
     ADDI addi = ADDI(1, 2, 3);
     uint32_t instr = addi.to_instruction();
+    RVUnparsedInstrUnion instr_union;
+    instr_union.instr_32 = instr;
+    RVUnparsedInstr unparsed_instr = RVUnparsedInstr(RVUnparsedInstrType::INSTR32, instr_union);
 
-    std::unique_ptr<AInstruction> parsed_instr = comp->get_cpu()->get_parser()->parse(instr);
+    std::unique_ptr<AInstruction> parsed_instr = comp->get_cpu()->get_parser()->parse(unparsed_instr);
 
     EXPECT_EQ(instr, parsed_instr->to_instruction());
 
     addi = ADDI(1, -2, 3);
     instr = addi.to_instruction();
+    instr_union.instr_32 = instr;
+    unparsed_instr = RVUnparsedInstr(RVUnparsedInstrType::INSTR32, instr_union);
 
-    parsed_instr = comp->get_cpu()->get_parser()->parse(instr);
+    parsed_instr = comp->get_cpu()->get_parser()->parse(unparsed_instr);
 
     EXPECT_EQ(instr, parsed_instr->to_instruction());
 }

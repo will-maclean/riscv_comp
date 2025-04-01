@@ -6,21 +6,21 @@
 #include <memory>
 #include <sstream>
 
-UndefInstr::UndefInstr(uint32_t instr):instr(instr){}
+UndefInstr::UndefInstr(RVUnparsedInstr instr):instr(instr){}
 
 InstrResult UndefInstr::execute(CPUThread* thread){
-	std::cout << "Unknown instruction: " << this->instr << std::endl;
+	std::cout << "Unknown instruction: " << this->instr.to_str() << std::endl;
 
 	return InstrResult(0, ExeFlow::ERROR);
 }
 
 std::string UndefInstr::to_string(){
 	std::stringstream s;
-	s << "unknown_instr " << this->instr;
+	s << "unknown_instr " << this->instr.to_str();
 	return s.str();
 }
 
-bool ISA::add_instr(uint32_t opcode, instr_gen f){
+bool ISA::add_instr(uint8_t opcode, instr_gen f){
 
 	if (this->instrs.count(opcode)){
 		return false;
@@ -39,8 +39,8 @@ void InstructionParser::register_isa(std::unique_ptr<ISA> isa) {
 	}
 }
 
-std::unique_ptr<AInstruction> InstructionParser::parse(uint32_t instruction){
-	uint32_t opcode = bits(instruction, 0, 6);
+std::unique_ptr<AInstruction> InstructionParser::parse(RVUnparsedInstr instruction){
+	uint8_t opcode = bits(instruction.opcode(), 0, 6);
 	if (this->instrs.count(opcode) == 0) {
 		return std::make_unique<UndefInstr>(instruction);
 	}
@@ -50,7 +50,7 @@ std::unique_ptr<AInstruction> InstructionParser::parse(uint32_t instruction){
 	return gen(instruction);
 }
 
-int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
+int32_t extract_imm_signed32(uint32_t instr, ImmType imm_type){
 	int32_t res = 0;
 
 	switch(imm_type){
@@ -91,7 +91,7 @@ int32_t extract_imm_signed(uint32_t instr, ImmType imm_type){
 	return res;
 }
 
-uint32_t extract_imm_unsigned(uint32_t instr, ImmType imm_type){
+uint32_t extract_imm_unsigned32(uint32_t instr, ImmType imm_type){
 	uint32_t res = 0;
 
 	switch(imm_type){
