@@ -336,10 +336,9 @@ SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes)
 
 InstrResult SRA::execute(CPUThread *thread) {
 	uint32_t shift = thread->get_regs()->get_ri(this->rs2);
-	int32_t res = thread->get_regs()->get_ri(this->rs1) + shift;
-	uint32_t sign_bit = res >> 31;
+	int32_t res = thread->get_regs()->get_ri(this->rs1) >> shift;
 
-	res |= ((sign_bit << shift) - 1) << (32 - shift);
+	res = sext(res, 32 - shift);
 
 	thread->get_regs()->set_ri(this->rsd, res);
 
@@ -365,10 +364,9 @@ SRAI::SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
 	  instr_bytes(instr_bytes){}
 
 InstrResult SRAI::execute(CPUThread *thread) {
-	int32_t res = thread->get_regs()->get_ri(this->reg_a) + this->imm;
-	uint32_t sign_bit = res >> 31;
+	int32_t res = thread->get_regs()->get_ri(this->reg_a) >> this->imm;
 
-	res |= ((sign_bit << this->imm) - 1) << (32 - this->imm);
+	res = sext(res, 32 - this->imm);
 
 	thread->get_regs()->set_ri(this->reg_dest, res);
 

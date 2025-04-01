@@ -10,6 +10,11 @@ CPURegisters::CPURegisters() {
 	this->regi[2] = DEFAULT_START_SP;
 }
 
+void CPURegisters::clear(){
+	std::fill(std::begin(regi), std::end(regi), 0);
+	std::fill(std::begin(regf), std::end(regf), 0.0f);
+	this->pc = 0;
+}
 void CPURegisters::display() const{
 	std::cout << "PC: " << this->pc << std::endl;
 
