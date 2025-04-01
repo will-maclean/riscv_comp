@@ -12,13 +12,11 @@ class CPUThread;
 enum RVUnparsedInstrType{
 	INSTR16,
 	INSTR32,
-	INSTR64,
 };
 
 union RVUnparsedInstrUnion{
 	uint16_t instr_16;
 	uint32_t instr_32;
-	uint64_t instr_64;
 };
 
 // RVUnparsedInstr
@@ -32,11 +30,9 @@ struct RVUnparsedInstr{
 	uint32_t opcode(){
 		switch(this->type){
 			case INSTR16:
-				return this->instr.instr_16 & 0x3F;
+				return this->instr.instr_16 & 0x3;
 			case INSTR32:
 				return this->instr.instr_32 & 0x7F;
-			case INSTR64:
-				return this->instr.instr_64 & 0x7F;
 		}
 		return 0;
 	}
@@ -47,8 +43,6 @@ struct RVUnparsedInstr{
 				return std::to_string(this->instr.instr_16);
 			case INSTR32:
 				return std::to_string(this->instr.instr_32);
-			case INSTR64:
-				return std::to_string(this->instr.instr_64);
 		}
 		return "Unknown instruction";
 	}

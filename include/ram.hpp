@@ -22,15 +22,12 @@ class RAM{
 			RVUnparsedInstrUnion instr;
 
 			uint8_t lower_code = this->mem[addr] & 0x3;
-			if(lower_code == 0x1){
-				type = RVUnparsedInstrType::INSTR16;
-				instr.instr_16 = get_h(addr);
-			}else if(lower_code == 0x3){
+			if(lower_code == 0x3){
 				type = RVUnparsedInstrType::INSTR32;
 				instr.instr_32 = get_w(addr);
-			}else{
-				type = RVUnparsedInstrType::INSTR64;
-				instr.instr_64 = get_w(addr);
+			}else {
+				type = RVUnparsedInstrType::INSTR16;
+				instr.instr_16 = get_h(addr);
 			}
 			return RVUnparsedInstr(type, instr);
 		}
