@@ -73,3 +73,18 @@ void RAM::set_b(uint32_t addr, uint8_t val){
 	}
 	this->mem[addr+0] = val;
 }
+
+RVUnparsedInstr RAM::get_rvinstr(uint32_t addr){
+	RVUnparsedInstrType type;
+	RVUnparsedInstrUnion instr;
+
+	uint8_t lower_code = this->mem[addr] & 0x3;
+	if(lower_code == 0x3){
+		type = RVUnparsedInstrType::INSTR32;
+		instr.instr_32 = get_w(addr);
+	}else {
+		type = RVUnparsedInstrType::INSTR16;
+		instr.instr_16 = get_h(addr);
+	}
+	return RVUnparsedInstr(type, instr);
+}

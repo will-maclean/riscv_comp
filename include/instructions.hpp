@@ -27,28 +27,10 @@ struct RVUnparsedInstr{
 	RVUnparsedInstrType type;
 	RVUnparsedInstrUnion instr;
 
-	uint32_t opcode(){
-		switch(this->type){
-			case INSTR16:
-				return this->instr.instr_16 & 0x3;
-			case INSTR32:
-				return this->instr.instr_32 & 0x7F;
-		}
-		return 0;
-	}
+	uint32_t opcode();
+	std::string to_str();
 
-	std::string to_str(){
-		switch(this->type){
-			case INSTR16:
-				return std::to_string(this->instr.instr_16);
-			case INSTR32:
-				return std::to_string(this->instr.instr_32);
-		}
-		return "Unknown instruction";
-	}
-
-	RVUnparsedInstr(RVUnparsedInstrType type, RVUnparsedInstrUnion instr)
-		: type(type), instr(instr) {}
+	RVUnparsedInstr(RVUnparsedInstrType type, RVUnparsedInstrUnion instr);
 };
 
 enum ExeFlow{
