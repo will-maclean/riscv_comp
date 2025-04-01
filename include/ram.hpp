@@ -5,7 +5,8 @@
 
 #include "instructions.hpp"
 
-#define RAM_WORDS 0xFFFFFFFF
+constexpr uint32_t RAM_WORDS = 0xFFFFFFFF;
+constexpr bool ROM_PROTECT_BINARY = true;
 
 class RAM{
 	public:
@@ -23,4 +24,6 @@ class RAM{
 		void set_b(uint32_t addr, uint8_t  val);
 	private:
 		uint8_t *mem;
+		bool protecting_rom = false;
+		uint32_t rom_last_addr;
 };
