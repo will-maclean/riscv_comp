@@ -38,6 +38,9 @@ Basic information about this computer:
 - write char to 0xFFFFFFFF for stdout
 - stack pointer starts at 0xFFFFFFEF
 - no c standard library support
+- supported instruction sets:
+    - rv32i
+    - rv32ic (in progress)
 
 ## Build instructions
 
