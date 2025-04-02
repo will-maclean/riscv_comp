@@ -9,6 +9,7 @@ class CPURegisters{
 public:
 	CPURegisters();
 	void display() const;
+	void clear();
 	void set_ri(uint32_t r, int32_t val);
 	int32_t get_ri(uint32_t r) const;
 	uint32_t pc;
@@ -25,8 +26,9 @@ class CPUThread{
 		CPUThread(RAM* ram, InstructionParser* parser);
 		void start();
 
-		CPURegisters* get_regs();
-		RAM* get_ram();
+		// Marked as virtual so we can mock them
+		virtual CPURegisters* get_regs();
+		virtual RAM* get_ram();
 
 	private:
 		void loop();

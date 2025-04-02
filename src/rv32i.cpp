@@ -6,21 +6,23 @@
 ADD::ADD(uint32_t reg_a, uint32_t reg_b, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  reg_b(reg_b),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult ADD::execute(CPUThread *thread)
-{
+ADD::ADD(uint32_t reg_a, uint32_t reg_b, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  reg_b(reg_b),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult ADD::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(reg_dest,
-		thread->get_regs()->get_ri(reg_a)
-		+ thread->get_regs()->get_ri(this->reg_b));
-	
-	return InstrResult(4);
+							   thread->get_regs()->get_ri(reg_a) + thread->get_regs()->get_ri(this->reg_b));
+
+	return InstrResult(this->instr_bytes);
 }
 
-uint32_t ADD::to_instruction()
-{
+uint32_t ADD::to_instruction() {
 	uint32_t res = 0;
 
 	res = set_bits(res, 0, 6, 0b0010011);
@@ -33,9 +35,9 @@ uint32_t ADD::to_instruction()
 	return res;
 }
 
-std::string ADD::to_string(){
+std::string ADD::to_string() {
 	std::stringstream s;
-	s << "add r" << this->reg_dest << ", r" << this->reg_a << ", r" << this->reg_a;
+	s << "add r" << this->reg_dest << ", r" << this->reg_a << ", r" << this->reg_b;
 
 	return s.str();
 }
@@ -43,20 +45,23 @@ std::string ADD::to_string(){
 SUB::SUB(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
 	  rs2(rs2),
-	  rsd(rsd)
-{
-}
+	  rsd(rsd),
+	  instr_bytes(4){}
 
-InstrResult SUB::execute(CPUThread *thread)
-{
+SUB::SUB(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SUB::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd,
-		thread->get_regs()->get_ri(rs1)
-		- thread->get_regs()->get_ri(rs2));
-	
-	return InstrResult(4);
+							   thread->get_regs()->get_ri(rs1) - thread->get_regs()->get_ri(rs2));
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SUB::to_string(){
+std::string SUB::to_string() {
 	std::stringstream s;
 	s << "sub r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -66,20 +71,23 @@ std::string SUB::to_string(){
 ADDI::ADDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult ADDI::execute(CPUThread *thread)
-{
+ADDI::ADDI(uint32_t reg_a, int32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult ADDI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        thread->get_regs()->get_ri(this->reg_a) + this->imm);
+							   thread->get_regs()->get_ri(this->reg_a) + this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-uint32_t ADDI::to_instruction()
-{
+uint32_t ADDI::to_instruction() {
 	uint32_t res = 0;
 
 	res = set_bits(res, 0, 6, 0b0010011);
@@ -91,7 +99,7 @@ uint32_t ADDI::to_instruction()
 	return res;
 }
 
-std::string ADDI::to_string(){
+std::string ADDI::to_string() {
 	std::stringstream s;
 	s << "addi r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -101,18 +109,22 @@ std::string ADDI::to_string(){
 SLLI::SLLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult SLLI::execute(CPUThread *thread)
-{
+SLLI::SLLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SLLI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        thread->get_regs()->get_ri(this->reg_a) << this->imm);
+							   thread->get_regs()->get_ri(this->reg_a) << this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
-std::string SLLI::to_string(){
+std::string SLLI::to_string() {
 	std::stringstream s;
 	s << "slli r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -121,20 +133,23 @@ std::string SLLI::to_string(){
 SLTI::SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult SLTI::execute(CPUThread *thread)
-{
+SLTI::SLTI(uint32_t reg_a, int32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SLTI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        thread->get_regs()->get_ri(this->reg_a) < this->imm ? 1 : 0);
+							   thread->get_regs()->get_ri(this->reg_a) < this->imm ? 1 : 0);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-uint32_t SLTI::to_instruction()
-{
+uint32_t SLTI::to_instruction() {
 	uint32_t res = 0;
 
 	res = set_bits(res, 0, 6, 0b0010011);
@@ -146,7 +161,7 @@ uint32_t SLTI::to_instruction()
 	return res;
 }
 
-std::string SLTI::to_string(){
+std::string SLTI::to_string() {
 	std::stringstream s;
 	s << "slti r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -156,19 +171,23 @@ std::string SLTI::to_string(){
 SLTIU::SLTIU(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult SLTIU::execute(CPUThread *thread)
-{
+SLTIU::SLTIU(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SLTIU::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        (uint32_t)thread->get_regs()->get_ri(this->reg_a) < this->imm ? 1 : 0);
+							   (uint32_t)thread->get_regs()->get_ri(this->reg_a) < this->imm ? 1 : 0);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SLTIU::to_string(){
+std::string SLTIU::to_string() {
 	std::stringstream s;
 	s << "sltiu r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -178,20 +197,24 @@ std::string SLTIU::to_string(){
 SLTU::SLTU(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
 	  rs2(rs2),
-	  rsd(rsd)
-{
-}
+	  rsd(rsd),
+	  instr_bytes(4){}
 
-InstrResult SLTU::execute(CPUThread *thread)
-{
+SLTU::SLTU(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SLTU::execute(CPUThread *thread) {
 	uint32_t a = thread->get_regs()->get_ri(this->rs1);
-    uint32_t b = thread->get_regs()->get_ri(this->rs2);
-    thread->get_regs()->set_ri(this->rsd, a < b ? 1 : 0);
+	uint32_t b = thread->get_regs()->get_ri(this->rs2);
+	thread->get_regs()->set_ri(this->rsd, a < b ? 1 : 0);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SLTU::to_string(){
+std::string SLTU::to_string() {
 	std::stringstream s;
 	s << "sltu r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -200,20 +223,24 @@ std::string SLTU::to_string(){
 SLT::SLT(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
 	  rs2(rs2),
-	  rsd(rsd)
-{
-}
+	  rsd(rsd),
+	  instr_bytes(4){}
 
-InstrResult SLT::execute(CPUThread *thread)
-{
+SLT::SLT(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SLT::execute(CPUThread *thread) {
 	int32_t a = thread->get_regs()->get_ri(this->rs1);
-    int32_t b = thread->get_regs()->get_ri(this->rs2);
-    thread->get_regs()->set_ri(this->rsd, a < b ? 1 : 0);
+	int32_t b = thread->get_regs()->get_ri(this->rs2);
+	thread->get_regs()->set_ri(this->rsd, a < b ? 1 : 0);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SLT::to_string(){
+std::string SLT::to_string() {
 	std::stringstream s;
 	s << "slt r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -223,19 +250,23 @@ std::string SLT::to_string(){
 XORI::XORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult XORI::execute(CPUThread *thread)
-{
+XORI::XORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult XORI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        thread->get_regs()->get_ri(this->reg_a) ^ this->imm);
+							   thread->get_regs()->get_ri(this->reg_a) ^ this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string XORI::to_string(){
+std::string XORI::to_string() {
 	std::stringstream s;
 	s << "xori r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -244,19 +275,23 @@ std::string XORI::to_string(){
 ANDI::ANDI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult ANDI::execute(CPUThread *thread)
-{
+ANDI::ANDI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult ANDI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        thread->get_regs()->get_ri(this->reg_a) & this->imm);
+							   thread->get_regs()->get_ri(this->reg_a) & this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string ANDI::to_string(){
+std::string ANDI::to_string() {
 	std::stringstream s;
 	s << "andi r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -265,19 +300,23 @@ std::string ANDI::to_string(){
 SRLI::SRLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult SRLI::execute(CPUThread *thread)
-{
+SRLI::SRLI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SRLI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        thread->get_regs()->get_ri(this->reg_a) >> this->imm);
+							   thread->get_regs()->get_ri(this->reg_a) >> this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SRLI::to_string(){
+std::string SRLI::to_string() {
 	std::stringstream s;
 	s << "srli r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -286,24 +325,27 @@ std::string SRLI::to_string(){
 SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t rsd)
 	: rs1(rs1),
 	  rs2(rs2),
-	  rsd(rsd)
-{
-}
+	  rsd(rsd),
+	  instr_bytes(4){}
 
-InstrResult SRA::execute(CPUThread *thread)
-{
+SRA::SRA(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes)
+	: rs1(rs1),
+	  rs2(rs2),
+	  rsd(rsd),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SRA::execute(CPUThread *thread) {
 	uint32_t shift = thread->get_regs()->get_ri(this->rs2);
-    int32_t res = thread->get_regs()->get_ri(this->rs1) + shift;
-    uint32_t sign_bit = res >> 31;
+	int32_t res = thread->get_regs()->get_ri(this->rs1) >> shift;
 
-    res |= ((sign_bit << shift) - 1) << (32 - shift);
+	res = sext(res, 32 - shift);
 
-    thread->get_regs()->set_ri(this->rsd, res);
+	thread->get_regs()->set_ri(this->rsd, res);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SRA::to_string(){
+std::string SRA::to_string() {
 	std::stringstream s;
 	s << "sra r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -312,23 +354,26 @@ std::string SRA::to_string(){
 SRAI::SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
+
+SRAI::SRAI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult SRAI::execute(CPUThread *thread) {
+	int32_t res = thread->get_regs()->get_ri(this->reg_a) >> this->imm;
+
+	res = sext(res, 32 - this->imm);
+
+	thread->get_regs()->set_ri(this->reg_dest, res);
+
+	return InstrResult(this->instr_bytes);
 }
 
-InstrResult SRAI::execute(CPUThread *thread)
-{
-	int32_t res = thread->get_regs()->get_ri(this->reg_a) + this->imm;
-    uint32_t sign_bit = res >> 31;
-
-    res |= ((sign_bit << this->imm) - 1) << (32 - this->imm);
-
-    thread->get_regs()->set_ri(this->reg_dest, res);
-
-    return InstrResult(4);
-}
-
-std::string SRAI::to_string(){
+std::string SRAI::to_string() {
 	std::stringstream s;
 	s << "srai r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -337,19 +382,23 @@ std::string SRAI::to_string(){
 ORI::ORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest)
 	: reg_a(reg_a),
 	  imm(imm),
-	  reg_dest(reg_dest)
-{
-}
+	  reg_dest(reg_dest),
+	  instr_bytes(4){}
 
-InstrResult ORI::execute(CPUThread *thread)
-{
+ORI::ORI(uint32_t reg_a, uint32_t imm, uint32_t reg_dest, uint8_t instr_bytes)
+	: reg_a(reg_a),
+	  imm(imm),
+	  reg_dest(reg_dest),
+	  instr_bytes(instr_bytes){}
+
+InstrResult ORI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->reg_dest,
-        thread->get_regs()->get_ri(this->reg_a) | this->imm);
+							   thread->get_regs()->get_ri(this->reg_a) | this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string ORI::to_string(){
+std::string ORI::to_string() {
 	std::stringstream s;
 	s << "ori r" << this->reg_dest << ", r" << this->reg_a << ", " << this->imm;
 
@@ -358,19 +407,22 @@ std::string ORI::to_string(){
 
 XOR::XOR(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
-													 rsd(rsd)
-{
-}
+													 rsd(rsd),
+													 instr_bytes(4){}
 
-InstrResult XOR::execute(CPUThread *thread)
-{
+XOR::XOR(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes) : rs1(rs1),
+																		  rs2(rs2),
+																		  rsd(rsd),
+																		  instr_bytes(instr_bytes){}
+
+InstrResult XOR::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd,
-        thread->get_regs()->get_ri(this->rs1) ^ thread->get_regs()->get_ri(this->rs2));
+							   thread->get_regs()->get_ri(this->rs1) ^ thread->get_regs()->get_ri(this->rs2));
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string XOR::to_string(){
+std::string XOR::to_string() {
 	std::stringstream s;
 	s << "xor r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -378,19 +430,22 @@ std::string XOR::to_string(){
 }
 OR::OR(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 												   rs2(rs2),
-												   rsd(rsd)
-{
-}
+												   rsd(rsd),
+												   instr_bytes(4){}
 
-InstrResult OR::execute(CPUThread *thread)
-{
+OR::OR(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes) : rs1(rs1),
+																		rs2(rs2),
+																		rsd(rsd),
+																		instr_bytes(instr_bytes){}
+
+InstrResult OR::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd,
-        thread->get_regs()->get_ri(this->rs1) | thread->get_regs()->get_ri(this->rs2));
+							   thread->get_regs()->get_ri(this->rs1) | thread->get_regs()->get_ri(this->rs2));
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string OR::to_string(){
+std::string OR::to_string() {
 	std::stringstream s;
 	s << "or r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -398,19 +453,22 @@ std::string OR::to_string(){
 }
 AND::AND(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
-													 rsd(rsd)
-{
-}
+													 rsd(rsd),
+													 instr_bytes(4){}
 
-InstrResult AND::execute(CPUThread *thread)
-{
+AND::AND(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes) : rs1(rs1),
+																		  rs2(rs2),
+																		  rsd(rsd),
+																		  instr_bytes(instr_bytes){}
+
+InstrResult AND::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd,
-        thread->get_regs()->get_ri(this->rs1) & thread->get_regs()->get_ri(this->rs2));
+							   thread->get_regs()->get_ri(this->rs1) & thread->get_regs()->get_ri(this->rs2));
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string AND::to_string(){
+std::string AND::to_string() {
 	std::stringstream s;
 	s << "and r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -418,19 +476,22 @@ std::string AND::to_string(){
 }
 SRL::SRL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
-													 rsd(rsd)
-{
-}
+													 rsd(rsd),
+													 instr_bytes(4){}
 
-InstrResult SRL::execute(CPUThread *thread)
-{
+SRL::SRL(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes) : rs1(rs1),
+																		  rs2(rs2),
+																		  rsd(rsd),
+																		  instr_bytes(instr_bytes){}
+
+InstrResult SRL::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd,
-        thread->get_regs()->get_ri(this->rs1) >> thread->get_regs()->get_ri(this->rs2));
+							   thread->get_regs()->get_ri(this->rs1) >> thread->get_regs()->get_ri(this->rs2));
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SRL::to_string(){
+std::string SRL::to_string() {
 	std::stringstream s;
 	s << "srl r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
@@ -438,243 +499,294 @@ std::string SRL::to_string(){
 }
 SLL::SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd) : rs1(rs1),
 													 rs2(rs2),
-													 rsd(rsd)
-{
-}
+													 rsd(rsd),
+													 instr_bytes(4){}
 
-InstrResult SLL::execute(CPUThread *thread)
-{
+SLL::SLL(uint32_t rs1, uint32_t rs2, uint32_t rsd, uint8_t instr_bytes) : rs1(rs1),
+																		  rs2(rs2),
+																		  rsd(rsd),
+																		  instr_bytes(instr_bytes){}
+
+InstrResult SLL::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd,
-        thread->get_regs()->get_ri(this->rs1) << thread->get_regs()->get_ri(this->rs2));
+							   thread->get_regs()->get_ri(this->rs1) << thread->get_regs()->get_ri(this->rs2));
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string SLL::to_string(){
+std::string SLL::to_string() {
 	std::stringstream s;
 	s << "sll r" << this->rsd << ", r" << this->rs1 << ", r" << this->rs2;
 
 	return s.str();
 }
-LUI::LUI(uint32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
+LUI::LUI(uint32_t imm, uint32_t rsd) : imm(imm), rsd(rsd),
+									   instr_bytes(4) {}
 
-InstrResult LUI::execute(CPUThread* thread) {
+LUI::LUI(uint32_t imm, uint32_t rsd, uint8_t instr_bytes) : imm(imm), rsd(rsd),
+															instr_bytes(instr_bytes) {}
+
+InstrResult LUI::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd, this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
-std::string LUI::to_string(){
+std::string LUI::to_string() {
 	std::stringstream s;
 	s << "lui r" << this->rsd << ", " << this->imm;
 
 	return s.str();
 }
 
-AUIPC::AUIPC(int32_t imm, uint32_t rsd) : imm(imm), rsd(rsd) {}
+AUIPC::AUIPC(int32_t imm, uint32_t rsd) : imm(imm), rsd(rsd),
+										  instr_bytes(4) {}
 
-InstrResult AUIPC::execute(CPUThread* thread) {
+AUIPC::AUIPC(int32_t imm, uint32_t rsd, uint8_t instr_bytes) : imm(imm), rsd(rsd),
+															   instr_bytes(instr_bytes) {}
+
+InstrResult AUIPC::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rsd, thread->get_regs()->pc + this->imm);
 
-    return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string AUIPC::to_string(){
+std::string AUIPC::to_string() {
 	std::stringstream s;
 	s << "auipc r" << this->rsd << ", " << this->imm;
 
 	return s.str();
 }
 
-BEQ::BEQ(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
+BEQ::BEQ(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													instr_bytes(4){}
 
-InstrResult BEQ::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) == thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BEQ::BEQ(uint32_t rs1, uint32_t rs2, int32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																		 instr_bytes(instr_bytes){}
 
-    return InstrResult(4);
+InstrResult BEQ::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) == thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BEQ::to_string(){
+std::string BEQ::to_string() {
 	std::stringstream s;
 	s << "beq r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
-BNE::BNE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
+BNE::BNE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													instr_bytes(4){}
 
-InstrResult BNE::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) != thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BNE::BNE(uint32_t rs1, uint32_t rs2, int32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																		 instr_bytes(instr_bytes){}
 
-    return InstrResult(4);
+InstrResult BNE::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) != thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BNE::to_string(){
+std::string BNE::to_string() {
 	std::stringstream s;
 	s << "bne r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
-BLT::BLT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
+BLT::BLT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													instr_bytes(4){}
 
-InstrResult BLT::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) < thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BLT::BLT(uint32_t rs1, uint32_t rs2, int32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																		 instr_bytes(instr_bytes){}
 
-    return InstrResult(4);
+InstrResult BLT::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) < thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BLT::to_string(){
+std::string BLT::to_string() {
 	std::stringstream s;
 	s << "blt r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
-BGT::BGT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
+BGT::BGT(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													instr_bytes(4){}
 
-InstrResult BGT::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) > thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BGT::BGT(uint32_t rs1, uint32_t rs2, int32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																		 instr_bytes(instr_bytes){}
 
-    return InstrResult(4);
+InstrResult BGT::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) > thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BGT::to_string(){
+std::string BGT::to_string() {
 	std::stringstream s;
 	s << "bgt r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
-BGE::BGE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
+BGE::BGE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													instr_bytes(4){}
 
-InstrResult BGE::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) >= thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BGE::BGE(uint32_t rs1, uint32_t rs2, int32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																		 instr_bytes(instr_bytes){}
 
-    return InstrResult(4);
+InstrResult BGE::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) >= thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BGE::to_string(){
+std::string BGE::to_string() {
 	std::stringstream s;
 	s << "bge r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
-BLE::BLE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
+BLE::BLE(uint32_t rs1, uint32_t rs2, int32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													instr_bytes(4){}
 
-InstrResult BLE::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) <= thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BLE::BLE(uint32_t rs1, uint32_t rs2, int32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																		 instr_bytes(instr_bytes){}
 
-    return InstrResult(4);
+InstrResult BLE::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) <= thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BLE::to_string(){
+std::string BLE::to_string() {
 	std::stringstream s;
 	s << "ble r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
-BLTU::BLTU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
+BLTU::BLTU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													   instr_bytes(4){}
 
-InstrResult BLTU::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) < thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BLTU::BLTU(uint32_t rs1, uint32_t rs2, uint32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																			instr_bytes(instr_bytes){}
 
-    return InstrResult(4);
+InstrResult BLTU::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) < thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BLTU::to_string(){
+std::string BLTU::to_string() {
 	std::stringstream s;
 	s << "bltu r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
-BGEU::BGEU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm)
-{}
-InstrResult BGEU::execute(CPUThread* thread) {
-	if(thread->get_regs()->get_ri(this->rs1) >= thread->get_regs()->get_ri(this->rs2)) {
-        return InstrResult(this->imm);
-    }
+BGEU::BGEU(uint32_t rs1, uint32_t rs2, uint32_t imm) : rs1(rs1), rs2(rs2), imm(imm),
+													   instr_bytes(4){}
 
-    return InstrResult(4);
+BGEU::BGEU(uint32_t rs1, uint32_t rs2, uint32_t imm, uint8_t instr_bytes) : rs1(rs1), rs2(rs2), imm(imm),
+																			instr_bytes(instr_bytes){}
+InstrResult BGEU::execute(CPUThread *thread) {
+	if (thread->get_regs()->get_ri(this->rs1) >= thread->get_regs()->get_ri(this->rs2))
+	{
+		return InstrResult(this->imm);
+	}
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string BGEU::to_string(){
+std::string BGEU::to_string() {
 	std::stringstream s;
 	s << "bgeu r" << this->rs1 << ", r" << this->rs2 << ", " << this->imm;
 
 	return s.str();
 }
 LOAD::LOAD(uint32_t base, LoadType type, uint32_t dest, int32_t offset)
-	:base(base),
-	type(type),
-	dest(dest),
-	offset(offset)
-{}
+	: base(base),
+	  type(type),
+	  dest(dest),
+	  offset(offset),
+	  instr_bytes(4){}
 
-InstrResult LOAD::execute(CPUThread* thread) {
-	uint32_t read_addr = (uint32_t)(thread->get_regs()->get_ri(this->base)
-        + this->offset);
-    
-    int32_t store_val = 0;
-    switch(this->type){
-        case LoadType::LB:
-            store_val = sext(thread->get_ram()->get_b(read_addr), 7);
+LOAD::LOAD(uint32_t base, LoadType type, uint32_t dest, int32_t offset, uint8_t instr_bytes)
+	: base(base),
+	  type(type),
+	  dest(dest),
+	  offset(offset),
+	  instr_bytes(instr_bytes){}
 
-            break;
-        case LoadType::LBU:
-            store_val = thread->get_ram()->get_b(read_addr);
-            break;
-        case LoadType::LH:
-            store_val = sext(thread->get_ram()->get_h(read_addr), 15);
-            break;
-        case LoadType::LHU:
-            store_val = thread->get_ram()->get_h(read_addr);
-            break;
-        case LoadType::LW:
-            store_val = thread->get_ram()->get_w(read_addr);
-            break;
-    }
+InstrResult LOAD::execute(CPUThread *thread) {
+	uint32_t read_addr = (uint32_t)(thread->get_regs()->get_ri(this->base) + this->offset);
 
-    thread->get_regs()->set_ri(this->dest, store_val);
+	int32_t store_val = 0;
+	switch (this->type)
+	{
+	case LoadType::LB:
+		store_val = sext(thread->get_ram()->get_b(read_addr), 7);
 
-    return InstrResult(4);
+		break;
+	case LoadType::LBU:
+		store_val = thread->get_ram()->get_b(read_addr);
+		break;
+	case LoadType::LH:
+		store_val = sext(thread->get_ram()->get_h(read_addr), 15);
+		break;
+	case LoadType::LHU:
+		store_val = thread->get_ram()->get_h(read_addr);
+		break;
+	case LoadType::LW:
+		store_val = thread->get_ram()->get_w(read_addr);
+		break;
+	}
+
+	thread->get_regs()->set_ri(this->dest, store_val);
+
+	return InstrResult(this->instr_bytes);
 }
 
-std::string LOAD::to_string(){
+std::string LOAD::to_string() {
 	std::stringstream s;
 
-	switch(this->type){
-		case LoadType::LB:
-			s << "lb ";
-			break;
-		case LoadType::LBU:
-			s << "lbu ";
-			break;
-		case LoadType::LH:
-			s << "lh ";
-			break;
-		case LoadType::LHU:
-			s << "lhu ";
-			break;
-		case LoadType::LW:
-			s << "lw ";
-			break;
+	switch (this->type)
+	{
+	case LoadType::LB:
+		s << "lb ";
+		break;
+	case LoadType::LBU:
+		s << "lbu ";
+		break;
+	case LoadType::LH:
+		s << "lh ";
+		break;
+	case LoadType::LHU:
+		s << "lhu ";
+		break;
+	case LoadType::LW:
+		s << "lw ";
+		break;
 	}
 
 	s << "r" << this->dest << ", (" << this->offset << ")r" << this->base;
@@ -683,44 +795,52 @@ std::string LOAD::to_string(){
 }
 STORE::STORE(uint32_t src, uint32_t base, StoreType type, int32_t offset)
 	: src(src),
-	base(base),
-	type(type),
-	offset(offset)
-{}
+	  base(base),
+	  type(type),
+	  offset(offset),
+	  instr_bytes(4){}
 
-InstrResult STORE::execute(CPUThread* thread){
+STORE::STORE(uint32_t src, uint32_t base, StoreType type, int32_t offset, uint8_t instr_bytes)
+	: src(src),
+	  base(base),
+	  type(type),
+	  offset(offset),
+	  instr_bytes(instr_bytes){}
+
+InstrResult STORE::execute(CPUThread *thread) {
 	uint32_t reg_val = thread->get_regs()->get_ri(this->src);
 
-    uint32_t write_addr = (uint32_t)(thread->get_regs()->get_ri(this->base)
-        + this->offset);
-    
-    switch(this->type){
-        case StoreType::SB:
-            thread->get_ram()->set_b(write_addr, reg_val);
-            break;
-        case StoreType::SH:
-            thread->get_ram()->set_h(write_addr, reg_val);
-            break;
-        case StoreType::SW:
-            thread->get_ram()->set_w(write_addr, reg_val);
-            break;
-    }
+	uint32_t write_addr = (uint32_t)(thread->get_regs()->get_ri(this->base) + this->offset);
 
-    return InstrResult(4);
+	switch (this->type)
+	{
+	case StoreType::SB:
+		thread->get_ram()->set_b(write_addr, reg_val);
+		break;
+	case StoreType::SH:
+		thread->get_ram()->set_h(write_addr, reg_val);
+		break;
+	case StoreType::SW:
+		thread->get_ram()->set_w(write_addr, reg_val);
+		break;
+	}
+
+	return InstrResult(this->instr_bytes);
 }
-std::string STORE::to_string(){
+std::string STORE::to_string() {
 	std::stringstream s;
 
-	switch(this->type){
-		case StoreType::SB:
-			s << "sb ";
-			break;
-		case StoreType::SH:
-			s << "sh ";
-			break;
-		case StoreType::SW:
-			s << "sw ";
-			break;
+	switch (this->type)
+	{
+	case StoreType::SB:
+		s << "sb ";
+		break;
+	case StoreType::SH:
+		s << "sh ";
+		break;
+	case StoreType::SW:
+		s << "sw ";
+		break;
 	}
 
 	s << "r" << this->src << ", (" << this->offset << ")r" << this->base;
@@ -728,64 +848,89 @@ std::string STORE::to_string(){
 	return s.str();
 }
 
-JAL::JAL(uint32_t rd, int32_t imm):rd(rd),imm(imm){}
-InstrResult JAL::execute(CPUThread* thread){
+JAL::JAL(uint32_t rd, int32_t imm) : rd(rd), imm(imm) {}
+
+JAL::JAL(uint32_t rd, int32_t imm, int32_t instr_bytes) : rd(rd), imm(imm), instr_bytes(instr_bytes) {}
+
+InstrResult JAL::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + 4);
 
-    return InstrResult(this->imm);
+	return InstrResult(this->imm);
 }
 
-std::string JAL::to_string(){
+std::string JAL::to_string() {
 	std::stringstream s;
 	s << "jal r" << this->rd << ", " << this->imm;
 
 	return s.str();
 }
-JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm):rs1(rs1),rd(rd),imm(imm){}
-InstrResult JALR::execute(CPUThread* thread){
-	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + 4);
+JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm)
+	: rs1(rs1), rd(rd), imm(imm), instr_bytes(4) {}
 
-    int32_t offset = this->imm + thread->get_regs()->get_ri(this->rs1) - thread->get_regs()->pc;
-    offset &= ~1;
+JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm, uint8_t instr_bytes)
+	: rs1(rs1), rd(rd), imm(imm), instr_bytes(instr_bytes) {}
 
-    return InstrResult(offset);
+InstrResult JALR::execute(CPUThread *thread) {
+	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + this->instr_bytes);
+
+	int32_t offset = this->imm + thread->get_regs()->get_ri(this->rs1) - thread->get_regs()->pc;
+	offset &= ~1;
+
+	return InstrResult(offset);
 }
 
-std::string JALR::to_string(){
+std::string JALR::to_string() {
 	std::stringstream s;
 	s << "jalr r" << this->rd << ", r" << this->rs1 << ", " << this->imm;
 
 	return s.str();
 }
 
-InstrResult FENCE::execute(CPUThread* thread){
+FENCE::FENCE()
+	: instr_bytes(4){}
+
+FENCE::FENCE(uint8_t instr_bytes)
+	: instr_bytes(instr_bytes){}
+
+InstrResult FENCE::execute(CPUThread *thread) {
 	std::cout << "Fence? Don't ask me" << std::endl;
-	return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string FENCE::to_string(){
+std::string FENCE::to_string() {
 	return std::string("fence");
 }
 
-InstrResult ECALL::execute(CPUThread* thread) {
+ECALL::ECALL()
+	: instr_bytes(4) {}
+ECALL::ECALL(uint8_t instr_bytes)
+	: instr_bytes(instr_bytes) {}
+
+InstrResult ECALL::execute(CPUThread *thread) {
 	std::cout << "ECALL" << std::endl;
-	return InstrResult(4);
+	return InstrResult(this->instr_bytes);
 }
 
-std::string ECALL::to_string(){
+std::string ECALL::to_string() {
 	return std::string("ecall");
 }
-InstrResult EBREAK::execute(CPUThread* thread) {
+
+EBREAK::EBREAK()
+	: instr_bytes(4){}
+
+	EBREAK::EBREAK(uint8_t instr_bytes)
+	: instr_bytes(instr_bytes){}
+
+InstrResult EBREAK::execute(CPUThread *thread) {
 	std::cout << "EBREAK" << std::endl;
 	return InstrResult(4, ExeFlow::STOP);
 }
 
-std::string EBREAK::to_string(){
+std::string EBREAK::to_string() {
 	return std::string("ebreak");
 }
-std::unique_ptr<AInstruction> rv32i_op_imm(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_op_imm(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -836,9 +981,8 @@ std::unique_ptr<AInstruction> rv32i_op_imm(RVUnparsedInstr unparsed_instr)
 	return std::make_unique<UndefInstr>(unparsed_instr);
 }
 
-std::unique_ptr<AInstruction> rv32i_op(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_op(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -889,9 +1033,8 @@ std::unique_ptr<AInstruction> rv32i_op(RVUnparsedInstr unparsed_instr)
 	}
 }
 
-std::unique_ptr<AInstruction> rv32i_lui(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_lui(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -902,9 +1045,8 @@ std::unique_ptr<AInstruction> rv32i_lui(RVUnparsedInstr unparsed_instr)
 		bits(instr, 7, 11));
 }
 
-std::unique_ptr<AInstruction> rv32i_auipc(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_auipc(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -916,9 +1058,8 @@ std::unique_ptr<AInstruction> rv32i_auipc(RVUnparsedInstr unparsed_instr)
 		bits(instr, 7, 11));
 }
 
-std::unique_ptr<AInstruction> rv32i_jal(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_jal(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -926,13 +1067,11 @@ std::unique_ptr<AInstruction> rv32i_jal(RVUnparsedInstr unparsed_instr)
 	uint32_t instr = unparsed_instr.instr.instr_32;
 	return std::make_unique<JAL>(
 		bits(instr, 7, 11),
-		extract_imm_signed32(instr, ImmType::J)
-	);
+		extract_imm_signed32(instr, ImmType::J));
 }
 
-std::unique_ptr<AInstruction> rv32i_jalr(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_jalr(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -942,13 +1081,11 @@ std::unique_ptr<AInstruction> rv32i_jalr(RVUnparsedInstr unparsed_instr)
 	return std::make_unique<JALR>(
 		bits(instr, 15, 19),
 		bits(instr, 7, 11),
-		extract_imm_signed32(instr, ImmType::I)
-	);
+		extract_imm_signed32(instr, ImmType::I));
 }
 
-std::unique_ptr<AInstruction> rv32i_branch(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_branch(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -979,85 +1116,81 @@ std::unique_ptr<AInstruction> rv32i_branch(RVUnparsedInstr unparsed_instr)
 	}
 }
 
-std::unique_ptr<AInstruction> rv32i_load(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_load(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 
 	uint32_t instr = unparsed_instr.instr.instr_32;
 	LoadType type;
-	switch(bits(instr, 12, 14)){
-		case 0:
-			type = LoadType::LB;
-			break;
-		case 1:
-			type = LoadType::LH;
-			break;
-		case 2:
-			type = LoadType::LW;
-			break;
-		case 4:
-			type = LoadType::LBU;
-			break;
-		case 5:
-			type = LoadType::LHU;
-			break;
-		default:
-			return std::make_unique<UndefInstr>(unparsed_instr);
+	switch (bits(instr, 12, 14))
+	{
+	case 0:
+		type = LoadType::LB;
+		break;
+	case 1:
+		type = LoadType::LH;
+		break;
+	case 2:
+		type = LoadType::LW;
+		break;
+	case 4:
+		type = LoadType::LBU;
+		break;
+	case 5:
+		type = LoadType::LHU;
+		break;
+	default:
+		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 
 	return std::make_unique<LOAD>(
-		bits(instr, 15, 19), 	// rs1
+		bits(instr, 15, 19), // rs1
 		type,
-		bits(instr, 7, 11), 	// rd
-		extract_imm_signed32(instr, ImmType::I)
-	);
+		bits(instr, 7, 11), // rd
+		extract_imm_signed32(instr, ImmType::I));
 }
-std::unique_ptr<AInstruction> rv32i_store(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_store(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 
 	uint32_t instr = unparsed_instr.instr.instr_32;
 	StoreType type;
-	switch(bits(instr, 12, 14)) {
-		case 0:
-			type = StoreType::SB;
-			break;
-		case 1:
-			type = StoreType::SH;
-			break;
-		case 2:
-			type = StoreType::SW;
-			break;
-		default:
-			return std::make_unique<UndefInstr>(unparsed_instr);
+	switch (bits(instr, 12, 14))
+	{
+	case 0:
+		type = StoreType::SB;
+		break;
+	case 1:
+		type = StoreType::SH;
+		break;
+	case 2:
+		type = StoreType::SW;
+		break;
+	default:
+		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 
 	return std::make_unique<STORE>(
-		bits(instr, 20, 24),	// rs2 (src)
-		bits(instr, 15, 19), 	// rs1 (base)
+		bits(instr, 20, 24), // rs2 (src)
+		bits(instr, 15, 19), // rs1 (base)
 		type,
-		extract_imm_signed32(instr, ImmType::S)
-	);
+		extract_imm_signed32(instr, ImmType::S));
 }
 
-std::unique_ptr<AInstruction> rv32i_misc_mem(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_misc_mem(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
 	return std::make_unique<FENCE>();
 }
 
-std::unique_ptr<AInstruction> rv32i_system(RVUnparsedInstr unparsed_instr)
-{
-	if(unparsed_instr.type != RVUnparsedInstrType::INSTR32)
+std::unique_ptr<AInstruction> rv32i_system(RVUnparsedInstr unparsed_instr) {
+	if (unparsed_instr.type != RVUnparsedInstrType::INSTR32)
 	{
 		return std::make_unique<UndefInstr>(unparsed_instr);
 	}
@@ -1075,8 +1208,7 @@ std::unique_ptr<AInstruction> rv32i_system(RVUnparsedInstr unparsed_instr)
 
 	return std::make_unique<UndefInstr>(unparsed_instr);
 }
-std::unique_ptr<ISA> isa_rv32i()
-{
+std::unique_ptr<ISA> isa_rv32i() {
 	std::unique_ptr<ISA> isa = std::make_unique<ISA>();
 
 	isa.get()->add_instr(0b0000011, instr_gen(rv32i_load));

@@ -9,17 +9,23 @@
 #include <vector>
 #include <sstream>
 
-RAM::RAM(){
+template<typename T>
+void write_to_rom_warning(uint32_t addr, T val){
+	std::cout << "[WARNING] Attempt to write to ROM at addr=0x" << std::hex << addr << ", val=0x" << std::hex << val << std::endl;
+}
+
+RAM::RAM(): protecting_rom(false), rom_last_addr(0){
 	this->mem = (uint8_t*)malloc(RAM_WORDS * sizeof(uint32_t));
 }
 
-RAM::RAM(std::string load_path){
+RAM::RAM(std::string load_path): protecting_rom(ROM_PROTECT_BINARY){
 	this->mem = (uint8_t*)malloc(RAM_WORDS * sizeof(uint32_t));
 
 	std::ifstream file( load_path, std::ios::binary | std::ios::ate);
 
     file.seekg(0, std::ios::end);
     std::streamsize size = file.tellg();
+	this->rom_last_addr = size;
     file.seekg(0, std::ios::beg);
     file.read(reinterpret_cast<char*>(this->mem), size);
     file.close();
@@ -48,6 +54,10 @@ uint8_t RAM::get_b(uint32_t addr){
 	return this->mem[addr];
 }
 void RAM::set_w(uint32_t addr, uint32_t val){
+	if(this->protecting_rom && addr < this->rom_last_addr){
+		write_to_rom_warning(addr, val);
+		return;
+	}
 	if(addr == IO_ADDR){
 		std::string s = std::to_string(val);
 		write_to_stdout(s);
@@ -59,6 +69,10 @@ void RAM::set_w(uint32_t addr, uint32_t val){
 }
 
 void RAM::set_h(uint32_t addr, uint16_t val){
+	if(this->protecting_rom && addr < this->rom_last_addr){
+		write_to_rom_warning(addr, val);
+		return;
+	}
 	if(addr == IO_ADDR){
 		//TODO
 	}
@@ -66,6 +80,10 @@ void RAM::set_h(uint32_t addr, uint16_t val){
 	this->mem[addr+1] = bits(val,  8, 15);
 }
 void RAM::set_b(uint32_t addr, uint8_t val){
+	if(this->protecting_rom && addr < this->rom_last_addr){
+		write_to_rom_warning(addr, val);
+		return;
+	}
 	if(addr == IO_ADDR){
 		char c = (char)val;
 		std::string s(&c);
