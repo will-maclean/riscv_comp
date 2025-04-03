@@ -328,6 +328,32 @@ TEST(BGTTest, Execute) {
     EXPECT_EQ(bgt_instr.execute(&thread).pc_offset, 4);
 }
 
+TEST(BGETest, ExecuteGT) {
+    MockCPUThread thread;
+    thread.get_regs()->set_ri(1, 10);
+    thread.get_regs()->set_ri(2, 5);
+
+    BGE bgt_instr(1, 2, 8);
+    EXPECT_EQ(bgt_instr.execute(&thread).pc_offset, 8);
+}
+
+TEST(BGETest, ExecuteGTE) {
+    MockCPUThread thread;
+    thread.get_regs()->set_ri(1, 10);
+    thread.get_regs()->set_ri(2, 10);
+
+    BGE bgt_instr(1, 2, 8);
+    EXPECT_EQ(bgt_instr.execute(&thread).pc_offset, 8);
+}
+
+TEST(BGETest, ExecuteLT) {
+    MockCPUThread thread;
+    thread.get_regs()->set_ri(1, 5);
+    thread.get_regs()->set_ri(2, 10);
+
+    BGE bgt_instr(1, 2, 8);
+    EXPECT_EQ(bgt_instr.execute(&thread).pc_offset, 4);
+}
 TEST(LOADTest, Execute) {
     MockCPUThread thread;
     thread.get_ram()->set_w(0x100, 0x12345678);

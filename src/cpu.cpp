@@ -15,11 +15,24 @@ void CPURegisters::clear(){
 	std::fill(std::begin(regf), std::end(regf), 0.0f);
 	this->pc = 0;
 }
-void CPURegisters::display() const{
-	std::cout << "PC: " << this->pc << std::endl;
+void CPURegisters::display(bool newlines) const{
+	std::cout << "PC: " << this->pc;
+
+	if (newlines){
+		std::cout << std::endl;
+	} else {
+		std::cout << " | ";
+	}
+	
 
 	for(int i = 0; i < 32; i++){
-		std::cout << "IREG" << i << ": " << this->regi[i] << std::endl;
+		std::cout << "IREG" << i << ": " << this->regi[i];
+
+		if (newlines){
+			std::cout << std::endl;
+		} else {
+			std::cout << " | ";
+		}
 	}
 
 	// for(int i = 0; i < 32; i++){
@@ -66,7 +79,10 @@ void CPUThread::loop(){
 		std::unique_ptr<AInstruction> instr = this->parser->parse(instr_raw);	
 
 		std::cout << std::hex;
-		std::cout << "[INSTRUCTION (pc=0x" << this->registers.pc << ")] " << instr.get()->to_string() << std::endl;
+		std::cout << "[INSTRUCTION (pc=0x" << this->registers.pc << ")] " << instr.get()->to_string() << " | ";
+		// this->registers.display(false);
+		std::cout << std::endl;
+
 		std::cout << std::dec;
 
 		instr_res = instr->execute(this);

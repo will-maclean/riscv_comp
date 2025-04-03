@@ -8,7 +8,8 @@
 class CPURegisters{
 public:
 	CPURegisters();
-	void display() const;
+	void display() const{display(true);};
+	void display(bool newlines) const;
 	void clear();
 	void set_ri(uint32_t r, int32_t val);
 	int32_t get_ri(uint32_t r) const;

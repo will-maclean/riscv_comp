@@ -853,7 +853,7 @@ JAL::JAL(uint32_t rd, int32_t imm) : rd(rd), imm(imm) {}
 JAL::JAL(uint32_t rd, int32_t imm, int32_t instr_bytes) : rd(rd), imm(imm), instr_bytes(instr_bytes) {}
 
 InstrResult JAL::execute(CPUThread *thread) {
-	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + 4);
+	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + this->instr_bytes);
 
 	return InstrResult(this->imm);
 }
