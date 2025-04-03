@@ -923,7 +923,7 @@ EBREAK::EBREAK()
 
 InstrResult EBREAK::execute(CPUThread *thread) {
 	std::cout << "EBREAK" << std::endl;
-	return InstrResult(4, ExeFlow::STOP);
+	return InstrResult(this->instr_bytes, ExeFlow::STOP);
 }
 
 std::string EBREAK::to_string() {
