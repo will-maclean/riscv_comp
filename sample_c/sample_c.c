@@ -38,26 +38,8 @@ int main() {
         {7, 8, 9}
     };
 
-    int y[3][3] = {
-        {2, 3, 4},
-        {5, 6, 7},
-        {8, 9, 10}
-    };
-
-    int res[3][3] = {0};
-
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            res[i][j] = x[i][j] + y[i][j];
-        }
-    }
-
     print_s("x:\n", 3);
     print_matrix(x);
-    print_s("y:\n", 3);
-    print_matrix(y);
-    print_s("x+y:\n", 5);
-    print_matrix(res);
 
     return 0;
 }

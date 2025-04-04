@@ -80,7 +80,7 @@ void CPUThread::loop(){
 
 		std::cout << std::hex;
 		std::cout << "[INSTRUCTION (pc=0x" << this->registers.pc << ")] " << instr.get()->to_string() << " | ";
-		// this->registers.display(false);
+		this->registers.display(false);
 		std::cout << std::endl;
 
 		std::cout << std::dec;
