@@ -110,7 +110,7 @@ std::unique_ptr<AInstruction> rv32i_c1(RVUnparsedInstr unparsed_instr){
             }
 
             imm = 0;
-            imm |= bits(instr, 0, 4);
+            imm |= bits(instr, 2, 6);
             imm |= bit(instr, 12) << 5;
             imm = sext(imm, 5);
 
