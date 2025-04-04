@@ -848,7 +848,7 @@ std::string STORE::to_string() {
 	return s.str();
 }
 
-JAL::JAL(uint32_t rd, int32_t imm) : rd(rd), imm(imm) {}
+JAL::JAL(uint32_t rd, int32_t imm) : rd(rd), imm(imm), instr_bytes(4) {}
 
 JAL::JAL(uint32_t rd, int32_t imm, int32_t instr_bytes) : rd(rd), imm(imm), instr_bytes(instr_bytes) {}
 
@@ -873,8 +873,9 @@ JALR::JALR(uint32_t rs1, uint32_t rd, int32_t imm, uint8_t instr_bytes)
 InstrResult JALR::execute(CPUThread *thread) {
 	thread->get_regs()->set_ri(this->rd, thread->get_regs()->pc + this->instr_bytes);
 
-	int32_t offset = this->imm + thread->get_regs()->get_ri(this->rs1) - thread->get_regs()->pc;
+	int32_t offset = this->imm + thread->get_regs()->get_ri(this->rs1);
 	offset &= ~1;
+	offset -= thread->get_regs()->pc;
 
 	return InstrResult(offset);
 }
