@@ -200,10 +200,10 @@ std::unique_ptr<AInstruction> rv32i_c2(const RVUnparsedInstr &unparsed_instr){
         return std::make_unique<UndefInstr>(unparsed_instr);
     }
     const uint16_t instr = unparsed_instr.instr.instr_16;
-    const uint16_t f3 = bits(instr, 13, 15);
-    const uint16_t f4 = bits(instr, 12, 15);
-    const uint32_t rs2 = bits(instr,  2, 6);
-    const uint32_t rd = bits(instr,  7, 12);
+    const uint16_t f3  = bits(instr, 13, 15);
+    const uint16_t f4  = bits(instr, 12, 15);
+    const uint32_t rs2 = bits(instr,  2,  6);
+    const uint32_t rd  = bits(instr,  7, 11);
 
     int32_t imm = 0;
     switch(f3){
@@ -254,16 +254,20 @@ std::unique_ptr<AInstruction> rv32i_c2(const RVUnparsedInstr &unparsed_instr){
 
             return std::make_unique<JALR>(rd, 0, 0, 2);
         case 0x9:
-            // c.jalr
-            if(rs2 != 0){
-                // c.add
-                return std::make_unique<ADD>(rs2, rd, rd, 2);
+            if (rd == 0){
+                // c.break
+                return std::make_unique<EBREAK>(2);
+            } else if(rs2 == 0){
+                if(bits(instr, 2, 6) != 0){
+                    // these are undefined
+                    return std::make_unique<UndefInstr>(unparsed_instr);
+                }
+
+                // c.jalr
+                return std::make_unique<JALR>(rd, 0, 1, 2);
             }
-            if(bits(instr, 2, 6) != 0){
-                // these are undefined
-                return std::make_unique<UndefInstr>(unparsed_instr);
-            }
-            return std::make_unique<JALR>(rd, 0, 1, 2);
+            // c.add
+            return std::make_unique<ADD>(rs2, rd, rd, 2);
     }
 
     return std::make_unique<UndefInstr>(unparsed_instr);
