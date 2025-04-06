@@ -225,10 +225,10 @@ std::unique_ptr<AInstruction> rv32i_c2(const RVUnparsedInstr &unparsed_instr){
 
             imm = 0;
             imm |= bits(instr, 2, 3) << 6;
-            imm |= bits(instr, 4, 6) << 3;
+            imm |= bits(instr, 4, 6) << 2;
             imm |= bit(instr, 12)    << 5;
 
-            return std::make_unique<LOAD>(rd, LoadType::LW, 2, imm, 2);
+            return std::make_unique<LOAD>(2, LoadType::LW, rd, imm, 2);
         case 0x6:
             // c.swsp
             imm = 0;
