@@ -224,9 +224,9 @@ std::unique_ptr<AInstruction> rv32i_c2(const RVUnparsedInstr &unparsed_instr){
             }
 
             imm = 0;
-            imm |= bit(instr, 12)    << 6;
-            imm |= bits(instr, 2, 3) << 7;
+            imm |= bits(instr, 2, 3) << 6;
             imm |= bits(instr, 4, 6) << 3;
+            imm |= bit(instr, 12)    << 5;
 
             return std::make_unique<LOAD>(rd, LoadType::LW, 2, imm, 2);
         case 0x6:
