@@ -10,6 +10,7 @@
 class Comp{
 	public:
 		Comp(InstructionParser parser);
+		Comp(InstructionParser parser, std::string filename);
 		void start();
 
 		RAM* get_ram();

@@ -7,6 +7,12 @@ Comp::Comp(InstructionParser parser) :
         clear_stdout();
 }
 
+Comp::Comp(InstructionParser parser, std::string filename) :
+    ram(RAM(filename)),
+    cpu(CPU(&this->ram, parser)){
+        clear_stdout();
+}
+
 void Comp::start(){
     this->cpu.start();
 }
