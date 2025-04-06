@@ -6,11 +6,13 @@
 
 int main(int argc, char *argv[]){
 	// Get the filename to load
+	std::string filename;
 	if (argc < 2) {
-		std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+		filename = "/home/will/code/riscv_comp/sample_c/test.bin";
 		return 1;
+	} else {
+		filename = argv[1];
 	}
-	std::string filename = argv[1];
 
 	InstructionParser parser;
 	parser.register_isa(isa_rv32i());

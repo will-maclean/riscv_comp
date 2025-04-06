@@ -2,7 +2,7 @@
 #include <utils.hpp>
 
 Comp::Comp(InstructionParser parser) :
-    ram(RAM("/home/will/code/riscv_comp/sample_c/test.bin")),
+    ram(RAM()),
     cpu(CPU(&this->ram, parser)){
         clear_stdout();
 }
