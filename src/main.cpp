@@ -8,7 +8,8 @@ int main(int argc, char *argv[]){
 	// Get the filename to load
 	std::string filename;
 	if (argc < 2) {
-		filename = "/home/will/code/riscv_comp/sample_c/test.bin";
+		std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+		return 1;
 	} else {
 		filename = argv[1];
 	}
