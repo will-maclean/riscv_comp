@@ -215,7 +215,7 @@ std::unique_ptr<AInstruction> rv32i_c2(const RVUnparsedInstr &unparsed_instr){
             imm = 0;
             imm |= bits(instr, 2, 6);
 
-            return std::make_unique<SLLI>(rd, rd, imm, 2);
+            return std::make_unique<SLLI>(rd, imm, rd, 2);
             
         case 0x2:
             // c.lwsp
