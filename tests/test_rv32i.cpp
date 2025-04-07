@@ -7,7 +7,7 @@
 
 class MockCPUThread : public CPUThread {
 public:
-    MockCPUThread() : CPUThread(nullptr, nullptr) {
+    MockCPUThread() : CPUThread(nullptr, nullptr, nullptr) {
         this->ram = std::make_unique<RAM>();
         this->regs = CPURegisters();
         this->regs.clear();

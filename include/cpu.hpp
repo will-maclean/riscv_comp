@@ -2,6 +2,7 @@
 
 #include "ram.hpp"
 #include "instructions.hpp"
+#include "compdevices.hpp"
 
 
 // Has both int and float registers
@@ -24,26 +25,33 @@ private:
 
 class CPUThread{
 	public:
-		CPUThread(RAM* ram, InstructionParser* parser);
+		CPUThread(RAM* ram, InstructionParser* parser, CompDevices* devices);
 		void start();
 
 		// Marked as virtual so we can mock them
 		virtual CPURegisters* get_regs();
 		virtual RAM* get_ram();
+		virtual CompDevices* get_devices();
 
+		void interrupt(uint32_t addr);
+		void uninterrupt();
 	private:
 		void loop();
 
 		InstructionParser* parser;
 		RAM* ram;
+		CompDevices* devices;
 		CPURegisters registers;
 
 		bool running;
+		bool interruptable;
+		uint32_t pre_interrupt_pc;
+		CPURegisters pre_interrupt_regs;
 };
 
 class CPUCore{
 	public:
-		CPUCore(RAM* ram, InstructionParser* parser);
+		CPUCore(RAM* ram, InstructionParser* parser, CompDevices* devices);
 		void start();
 
 		CPUThread* get_thread();
@@ -54,7 +62,7 @@ class CPUCore{
 
 class CPU{
 	public:
-		CPU(RAM* ram, InstructionParser parser);
+		CPU(RAM* ram, InstructionParser parser, CompDevices* devices);
 		void start();
 
 		CPUCore* get_core();

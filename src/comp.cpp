@@ -3,13 +3,15 @@
 
 Comp::Comp(InstructionParser parser) :
     ram(RAM()),
-    cpu(CPU(&this->ram, parser)){
+    devices(CompDevices()),
+    cpu(CPU(&this->ram, parser, &this->devices)){
         clear_stdout();
 }
 
 Comp::Comp(InstructionParser parser, std::string filename) :
     ram(RAM(filename)),
-    cpu(CPU(&this->ram, parser)){
+    devices(CompDevices()),
+    cpu(CPU(&this->ram, parser, &this->devices)){
         clear_stdout();
 }
 

@@ -1,5 +1,5 @@
 #pragma once
 
-class RAM;
+class CPUThread;
 
-void syscall(RAM* ram);
+void syscall(CPUThread* thread);
