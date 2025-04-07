@@ -9,7 +9,6 @@ int main(int argc, char *argv[]){
 	std::string filename;
 	if (argc < 2) {
 		filename = "/home/will/code/riscv_comp/sample_c/test.bin";
-		return 1;
 	} else {
 		filename = argv[1];
 	}
