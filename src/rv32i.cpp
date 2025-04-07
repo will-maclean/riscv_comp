@@ -1,4 +1,5 @@
 #include "rv32i.hpp"
+#include "syscall.hpp"
 #include "utils.hpp"
 
 #include <sstream>
@@ -908,7 +909,7 @@ ECALL::ECALL(uint8_t instr_bytes)
 	: instr_bytes(instr_bytes) {}
 
 InstrResult ECALL::execute(CPUThread *thread) {
-	std::cout << "ECALL" << std::endl;
+	syscall(thread->get_ram());
 	return InstrResult(this->instr_bytes);
 }
 

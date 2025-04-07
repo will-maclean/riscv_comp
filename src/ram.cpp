@@ -58,10 +58,6 @@ void RAM::set_w(uint32_t addr, uint32_t val){
 		write_to_rom_warning(addr, val);
 		return;
 	}
-	if(addr == IO_ADDR){
-		std::string s = std::to_string(val);
-		write_to_stdout(s);
-	}
 	this->mem[addr+0] = bits(val,  0,  7);
 	this->mem[addr+1] = bits(val,  8, 15);
 	this->mem[addr+2] = bits(val, 16, 23);
@@ -73,9 +69,6 @@ void RAM::set_h(uint32_t addr, uint16_t val){
 		write_to_rom_warning(addr, val);
 		return;
 	}
-	if(addr == IO_ADDR){
-		//TODO
-	}
 	this->mem[addr+0] = bits(val,  0,  7);
 	this->mem[addr+1] = bits(val,  8, 15);
 }
@@ -83,11 +76,6 @@ void RAM::set_b(uint32_t addr, uint8_t val){
 	if(this->protecting_rom && addr < this->rom_last_addr){
 		write_to_rom_warning(addr, val);
 		return;
-	}
-	if(addr == IO_ADDR){
-		char c = (char)val;
-		std::string s(&c);
-		write_to_stdout(s);
 	}
 	this->mem[addr+0] = val;
 }
