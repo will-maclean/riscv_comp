@@ -59,6 +59,7 @@ std::unique_ptr<AInstruction> rv32i_c1(RVUnparsedInstr unparsed_instr){
         return std::make_unique<UndefInstr>(unparsed_instr);
     }
     const uint16_t instr = unparsed_instr.instr.instr_16;
+    const uint16_t f2 = bits(instr, 5, 6);
     const uint16_t f3 = bits(instr, 13, 15);
     const uint16_t f6 = bits(instr, 10, 15);
 
@@ -141,8 +142,6 @@ std::unique_ptr<AInstruction> rv32i_c1(RVUnparsedInstr unparsed_instr){
 
             return std::make_unique<ADDI>(rsd, imm, 0, 2);
         case 4:
-            
-
             if(bits(instr, 10, 11) == 0){
                 // shamt[5] must be 0 on rv32c
                 if(bit(instr, 12)){
@@ -165,7 +164,7 @@ std::unique_ptr<AInstruction> rv32i_c1(RVUnparsedInstr unparsed_instr){
                 imm = sext(imm, 6);
                 return std::make_unique<ANDI>(rs1+8, rs1+8, imm, 2);
             } else {
-                switch (f6) {
+                switch ((f6 << 2) | f2) {
                 case 0x8F:
                     // c.and
                     return std::make_unique<AND>(rs1+8, rs2+8, rs1+8, 2);
@@ -180,6 +179,7 @@ std::unique_ptr<AInstruction> rv32i_c1(RVUnparsedInstr unparsed_instr){
                     return std::make_unique<SUB>(rs1+8, rs2+8, rs1+8, 2);
                 }
             }
+            break;
         case 5:
             // c.j
             return std::make_unique<JAL>(0, immj, 2);
