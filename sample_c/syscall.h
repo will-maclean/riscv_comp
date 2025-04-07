@@ -52,7 +52,7 @@ void print_d(int d){
 
 void configure_timer_fn_ptr(
     uint8_t timer_id,
-    TIMER_CALL_TYPE call_type,
+    enum TIMER_CALL_TYPE call_type,
     uint8_t timer_ticks,
     void* fn
 ){
@@ -73,7 +73,7 @@ void configure_timer_fn_ptr(
 
 void configure_timer_raw_interrupt_addr(
     uint8_t timer_id,
-    TIMER_CALL_TYPE call_type,
+    enum TIMER_CALL_TYPE call_type,
     uint8_t timer_ticks,
     uint32_t interrupt_addr
 ){

@@ -909,7 +909,7 @@ ECALL::ECALL(uint8_t instr_bytes)
 	: instr_bytes(instr_bytes) {}
 
 InstrResult ECALL::execute(CPUThread *thread) {
-	syscall(thread->get_ram(), thread->get_devices());
+	syscall(thread);
 	return InstrResult(this->instr_bytes);
 }
 

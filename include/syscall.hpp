@@ -1,6 +1,5 @@
 #pragma once
 
-class RAM;
-struct CompDevices;
+class CPUThread;
 
-void syscall(RAM* ram, CompDevices* devices);
+void syscall(CPUThread* thread);
