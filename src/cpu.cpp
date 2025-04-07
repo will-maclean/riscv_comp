@@ -129,6 +129,7 @@ void CPUThread::interrupt(uint32_t addr){
 	}
 	std::cout << "[INTERRUPT] Interrupting at addr 0x" << std::hex << addr << std::dec << std::endl;
 	this->pre_interrupt_pc = this->registers.pc;
+	this->pre_interrupt_regs = this->registers;
 	this->registers.pc = addr;
 	this->interruptable = false;
 }
@@ -136,6 +137,7 @@ void CPUThread::interrupt(uint32_t addr){
 void CPUThread::uninterrupt(){
 	std::cout << "[INTERRUPT] Uninterrupting" << std::endl;
 	this->registers.pc = this->pre_interrupt_pc;
+	this->registers = this->pre_interrupt_regs;
 	this->interruptable = true;
 }
 

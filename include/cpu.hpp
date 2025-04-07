@@ -46,6 +46,7 @@ class CPUThread{
 		bool running;
 		bool interruptable;
 		uint32_t pre_interrupt_pc;
+		CPURegisters pre_interrupt_regs;
 };
 
 class CPUCore{

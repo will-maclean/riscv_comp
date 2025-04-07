@@ -97,5 +97,4 @@ On an interrupt:
 2. The PC is set to the interrupt address
 3. Execution continues until the `exit_interrupt` syscall is called.
 
-Note - at this stage interrupts are NOT responsible for saving and/or restoring
-register state. This is likely to come in the future.
+On the completion of an interrupt, the register state pre-interrupt is restored.
