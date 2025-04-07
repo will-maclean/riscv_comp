@@ -52,7 +52,9 @@ CPUThread::CPUThread(RAM* ram, InstructionParser* parser, CompDevices* devices)
 	: parser(parser),
 	  ram(ram),
 	  devices(devices),
-	  running(false)
+	  running(false),
+	  interruptable(true),
+	  pre_interrupt_pc(0)
 {}
 
 
@@ -99,6 +101,8 @@ void CPUThread::loop(){
 			this->devices->timers[i].tick();
 			if(this->devices->timers[i].is_done()){
 				std::cout << "[TIMER] Timer " << i << " done" << std::endl;
+
+
 				uint32_t interrupt_addr = this->devices->timers[i].get_interrupt_addr();
 				this->interrupt(interrupt_addr);
 				this->devices->timers[i].reset();
@@ -118,8 +122,21 @@ void CPUThread::loop(){
 }
 
 void CPUThread::interrupt(uint32_t addr){
+	if(!this->interruptable){
+		//TODO: better things to do here??
+		std::cout << "[INTERRUPT] Not interrupting, already interrupted" << std::endl;
+		return;
+	}
 	std::cout << "[INTERRUPT] Interrupting at addr 0x" << std::hex << addr << std::dec << std::endl;
+	this->pre_interrupt_pc = this->registers.pc;
 	this->registers.pc = addr;
+	this->interruptable = false;
+}
+
+void CPUThread::uninterrupt(){
+	std::cout << "[INTERRUPT] Uninterrupting" << std::endl;
+	this->registers.pc = this->pre_interrupt_pc;
+	this->interruptable = true;
 }
 
 RAM* CPUThread::get_ram(){

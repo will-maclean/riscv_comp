@@ -33,9 +33,10 @@ class CPUThread{
 		virtual RAM* get_ram();
 		virtual CompDevices* get_devices();
 
+		void interrupt(uint32_t addr);
+		void uninterrupt();
 	private:
 		void loop();
-		void interrupt(uint32_t addr);
 
 		InstructionParser* parser;
 		RAM* ram;
@@ -43,6 +44,8 @@ class CPUThread{
 		CPURegisters registers;
 
 		bool running;
+		bool interruptable;
+		uint32_t pre_interrupt_pc;
 };
 
 class CPUCore{
