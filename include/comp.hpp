@@ -5,6 +5,10 @@
 
 #include "cpu.hpp"
 #include "ram.hpp"
+#include "timer.hpp"
+#include "consts.hpp"
+#include "compdevices.hpp"
+
 
 
 class Comp{
@@ -18,5 +22,6 @@ class Comp{
 
 	private:
 		RAM ram;
+		CompDevices devices;
 		CPU cpu;
 };

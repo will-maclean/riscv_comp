@@ -48,11 +48,12 @@ void CPURegisters::set_ri(uint32_t r, int32_t val){
 int32_t CPURegisters::get_ri(uint32_t r) const{
 	return this->regi[r];
 }
-CPUThread::CPUThread(RAM* ram, InstructionParser* parser)
-{
-	this->ram = ram;
-	this->parser = parser;
-}
+CPUThread::CPUThread(RAM* ram, InstructionParser* parser, CompDevices* devices)
+	: parser(parser),
+	  ram(ram),
+	  devices(devices),
+	  running(false)
+{}
 
 
 CPURegisters* CPUThread::get_regs(){
@@ -94,6 +95,16 @@ void CPUThread::loop(){
 			this->running = false;
 		}
 
+		for(int i = 0; i < N_TIMERS; i++){
+			this->devices->timers[i].tick();
+			if(this->devices->timers[i].is_done()){
+				std::cout << "[TIMER] Timer " << i << " done" << std::endl;
+				uint32_t interrupt_addr = this->devices->timers[i].get_interrupt_addr();
+				this->interrupt(interrupt_addr);
+				this->devices->timers[i].reset();
+			}
+		}
+
 		i++;
 	}
 
@@ -106,12 +117,20 @@ void CPUThread::loop(){
 	}
 }
 
+void CPUThread::interrupt(uint32_t addr){
+	std::cout << "[INTERRUPT] Interrupting at addr 0x" << std::hex << addr << std::dec << std::endl;
+	this->registers.pc = addr;
+}
+
 RAM* CPUThread::get_ram(){
 	return this->ram;
 }
 
-CPUCore::CPUCore(RAM* ram, InstructionParser* parser):
-	thread(CPUThread(ram, parser)){
+CompDevices* CPUThread::get_devices(){
+	return this->devices;
+}
+CPUCore::CPUCore(RAM* ram, InstructionParser* parser, CompDevices* devices) :
+	thread(CPUThread(ram, parser, devices)){
 }
 
 void CPUCore::start(){
@@ -126,9 +145,9 @@ CPUCore* CPU::get_core(){
 	return &this->core;
 }
 
-CPU::CPU(RAM* ram, InstructionParser parser) : 
+CPU::CPU(RAM* ram, InstructionParser parser, CompDevices* devices) : 
 	parser(parser),	
-	core(CPUCore(ram, &this->parser))
+	core(CPUCore(ram, &this->parser, devices))
 {}
 
 InstructionParser* CPU::get_parser(){
